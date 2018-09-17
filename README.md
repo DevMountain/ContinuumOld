@@ -57,7 +57,7 @@ The second tab is a separate navigation controller that will hold a view control
 
 Your Storyboard should be simple skeleton resembeling the set up below:
 
-/Users/devmountain/Desktop/Screen Shot 2018-09-17 at 2.32.47 PM.png
+![Alt text](/Photos/storyboard1.png?raw=true "Storyboard 1")
 
 ### Implement Model
 
