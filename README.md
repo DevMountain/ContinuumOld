@@ -54,9 +54,10 @@ The second tab is a separate navigation controller that will hold a view control
 4. Add a `PostDetailTableViewController` subclass of `UITableViewController` and assign it to the Post Detail scene from step 3.
 5. Add a `UITableViewController` Add Post scene, embed it into a `UINavigationController`. Make this navigation controller your second tab in the tab bar controller.
 6. Add a `AddPostTableViewController` subclass of `UITableViewController` and assign it to the Add Post scene from step 5.
-7. Add a `UITableViewcontroller` Search Results scene. It does not need a segue to any other view controller.
-    * note: You will implement this scene in Part 2 when setting up the `UISearchController` on the Search scene
-8. Add a `SearchResultsTableViewController` subclass of `UITableViewController` and assign it to the Search Results scene.
+
+Your Storyboard should be simple skeleton resembeling the set up below:
+
+/Users/devmountain/Desktop/Screen Shot 2018-09-17 at 2.32.47 PM.png
 
 ### Implement Model
 

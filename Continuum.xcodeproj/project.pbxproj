@@ -12,6 +12,8 @@
 		F73AC985215044290012A8DE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F73AC984215044290012A8DE /* Assets.xcassets */; };
 		F73AC988215044290012A8DE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F73AC986215044290012A8DE /* LaunchScreen.storyboard */; };
 		F73AC9912150453B0012A8DE /* PostListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73AC9902150453A0012A8DE /* PostListTableViewController.swift */; };
+		F73AC995215046730012A8DE /* PostDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73AC994215046730012A8DE /* PostDetailTableViewController.swift */; };
+		F73AC997215046D60012A8DE /* AddPostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73AC996215046D60012A8DE /* AddPostTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +25,8 @@
 		F73AC989215044290012A8DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F73AC98F2150443C0012A8DE /* Continuum.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Continuum.entitlements; sourceTree = "<group>"; };
 		F73AC9902150453A0012A8DE /* PostListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostListTableViewController.swift; sourceTree = "<group>"; };
+		F73AC994215046730012A8DE /* PostDetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailTableViewController.swift; sourceTree = "<group>"; };
+		F73AC996215046D60012A8DE /* AddPostTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPostTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +70,8 @@
 			isa = PBXGroup;
 			children = (
 				F73AC9902150453A0012A8DE /* PostListTableViewController.swift */,
+				F73AC994215046730012A8DE /* PostDetailTableViewController.swift */,
+				F73AC996215046D60012A8DE /* AddPostTableViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -160,6 +166,8 @@
 			files = (
 				F73AC9912150453B0012A8DE /* PostListTableViewController.swift in Sources */,
 				F73AC97E215044280012A8DE /* AppDelegate.swift in Sources */,
+				F73AC997215046D60012A8DE /* AddPostTableViewController.swift in Sources */,
+				F73AC995215046730012A8DE /* PostDetailTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
