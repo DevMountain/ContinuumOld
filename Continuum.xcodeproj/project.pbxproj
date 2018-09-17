@@ -14,6 +14,10 @@
 		F73AC9912150453B0012A8DE /* PostListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73AC9902150453A0012A8DE /* PostListTableViewController.swift */; };
 		F73AC995215046730012A8DE /* PostDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73AC994215046730012A8DE /* PostDetailTableViewController.swift */; };
 		F73AC997215046D60012A8DE /* AddPostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73AC996215046D60012A8DE /* AddPostTableViewController.swift */; };
+		F73AC99921504ADD0012A8DE /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73AC99821504ADD0012A8DE /* Post.swift */; };
+		F73AC99B21504AE20012A8DE /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73AC99A21504AE20012A8DE /* Comment.swift */; };
+		F73AC99E215054A00012A8DE /* PostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73AC99D215054A00012A8DE /* PostController.swift */; };
+		F73AC9A021505BB10012A8DE /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73AC99F21505BB10012A8DE /* PostTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +31,10 @@
 		F73AC9902150453A0012A8DE /* PostListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostListTableViewController.swift; sourceTree = "<group>"; };
 		F73AC994215046730012A8DE /* PostDetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailTableViewController.swift; sourceTree = "<group>"; };
 		F73AC996215046D60012A8DE /* AddPostTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPostTableViewController.swift; sourceTree = "<group>"; };
+		F73AC99821504ADD0012A8DE /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		F73AC99A21504AE20012A8DE /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		F73AC99D215054A00012A8DE /* PostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostController.swift; sourceTree = "<group>"; };
+		F73AC99F21505BB10012A8DE /* PostTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +70,9 @@
 				F73AC98F2150443C0012A8DE /* Continuum.entitlements */,
 				F73AC993215045540012A8DE /* Resources */,
 				F73AC9922150453E0012A8DE /* ViewControllers */,
+				F73AC99C21504AE60012A8DE /* Models */,
+				F73AC9A121505BB50012A8DE /* ModelControllers */,
+				F73AC9A221505BBE0012A8DE /* Views */,
 			);
 			path = Continuum;
 			sourceTree = "<group>";
@@ -86,6 +97,31 @@
 				F73AC989215044290012A8DE /* Info.plist */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		F73AC99C21504AE60012A8DE /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F73AC99821504ADD0012A8DE /* Post.swift */,
+				F73AC99A21504AE20012A8DE /* Comment.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F73AC9A121505BB50012A8DE /* ModelControllers */ = {
+			isa = PBXGroup;
+			children = (
+				F73AC99D215054A00012A8DE /* PostController.swift */,
+			);
+			path = ModelControllers;
+			sourceTree = "<group>";
+		};
+		F73AC9A221505BBE0012A8DE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F73AC99F21505BB10012A8DE /* PostTableViewCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -165,9 +201,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				F73AC9912150453B0012A8DE /* PostListTableViewController.swift in Sources */,
+				F73AC99B21504AE20012A8DE /* Comment.swift in Sources */,
 				F73AC97E215044280012A8DE /* AppDelegate.swift in Sources */,
+				F73AC9A021505BB10012A8DE /* PostTableViewCell.swift in Sources */,
 				F73AC997215046D60012A8DE /* AddPostTableViewController.swift in Sources */,
+				F73AC99E215054A00012A8DE /* PostController.swift in Sources */,
 				F73AC995215046730012A8DE /* PostDetailTableViewController.swift in Sources */,
+				F73AC99921504ADD0012A8DE /* Post.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -316,7 +356,7 @@
 				CODE_SIGN_ENTITLEMENTS = Continuum/Continuum.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 77U2457882;
-				INFOPLIST_FILE = Continuum/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Continuum/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -335,7 +375,7 @@
 				CODE_SIGN_ENTITLEMENTS = Continuum/Continuum.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 77U2457882;
-				INFOPLIST_FILE = Continuum/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Continuum/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

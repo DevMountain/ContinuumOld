@@ -71,16 +71,35 @@ Create a `Post` model object that will hold image data and comments.
 
 1. Add a new `Post` class to your project.
 2. Add a `photoData` property of type `Data?`, a `timestamp` `Date` property, and a `comments` property of type `[Comment]`.
-3. Add a computed property, `photo` that returns a `UIImage` initialized using the data in `photoData`.
-4. Add an initializer that accepts photoData, timestamp, and comments array. Provide default values for the `timestamp` and `comments` arguments, so they can be ommitted if desired.
+3. Add a computed property, `photo` with a getter which returns a `UIImage` initialized using the data in `photoData` and a setter which adjusts the value of the `photoData` property to match that of the `newValue` for UIImage.  _Notice, the initalizer for `UIImage(data: )` is failable and will return an optional UIImage and that `newValue.jpegData(compressionQuality: )` optional data.  You will need to handle these optionals by making `photoData` and `photo` optional properties._
+
+```
+var photo: UIImage?{
+    get{
+        guard let photoData = photoData else {return nil}
+        return UIImage(data: photoData)
+    }
+    set{
+        photoData = newValue?.jpegData(compressionQuality: 0.6)
+    }
+}
+```
+
+4. Add an initializer that accepts a photo, timestamp, and comments array. Provide a default values for the `timestamp` argument equal to the current date i.e. `Date()`.
+
+###### CloudKit Integration
+
+5.  
 
 #### Comment
 
 Create a `Comment` model object that will hold user-submitted text comments for a specific `Post`.
 
 1. Add a new `Comment` class to your project.
-2. Add a `text` property of type `String`, a `timestamp` `Date` property, and a `post` property of type `Post`.
-3. Add an initializer that accepts text, timestamp, and a post. Provide a default values for the `timestamp` argument, so it can be ommitted if desired.
+2. Add a `text` property of type `String`, a `timestamp` `Date` property, and a weak `post` property of type `Post?`.
+* The comment objects reference to the post object should be weak in order to avoid retain cycles later on.  
+`weak var post: Post?`
+3. Add an initializer that accepts text, timestamp, and a post. Provide a default values for the `timestamp` argument equal to the current date, so it can be ommitted if desired.
 
 ### Model Object Controller
 
@@ -88,10 +107,13 @@ Add and implement the `PostController` class that will be used for CRUD operatio
 
 1. Add a new `PostController` class file.
 2. Add a `sharedController` singleton property.
-3. Add a `posts` property.
-4. Add an `addComment(toPost: ...)` function that takes a `text` parameter as a `String`, and a `Post` parameter. This should return a Comment object in a completion closure.
+3. Add a `posts` property initialized as an empty array.
+4. Add an `addComment` function that takes a `text` parameter as a `String`, and a `Post` parameter. This should return a Comment object in a completion closure.
+* _For now this function will only initialize a new comment and append it to the given post's comments array._
 5. Add a `createPostWith(image: ...)` function that takes an image parameter as a `UIImage` and a caption as a `String`. This should return a Post object in a completion closure.
-6. Implement the `createPostWith(image: ...)` function to initialize a `Post` with the image and a `Comment` with the caption text. Note: use the `addComment(toPost: ...)` function you just created to call the appropriate `Comment` initializer and adds the comment to the appropriate post.
+6. Implement the `createPostWith(image: ...)` function to initialize a `Post` with the image and a `Comment` with the caption text.
+
+_Note: These CRUD functions will only work locally right now.  We will integrate Cloudkit further along in the project_
 
 ### Wire Up Views
 
@@ -99,11 +121,14 @@ Add and implement the `PostController` class that will be used for CRUD operatio
 
 Implement the Post List Table View Controller. You will use a similar cell to display posts in multiple scenes in your application. Create a custom `PostTableViewCell` that can be reused in different scenes.
 
-1. Implement the scene in Interface Builder by creating a custom cell with an image view that fills the cell.
-2. Create a `PostTableViewCell` class, add a `post` variable, and implement an `updateViews` function to the `PostTableViewCell` to update the image view with the `Post`'s photo. Call the function in the didSet of the `post` variable'
+1. Implement the scene in Interface Builder by creating a custom cell with an image view that fills most of the cell, a label for the posts caption (the first comment in its array), and another label for diplaying the number of comments a post has.  With the caption label selected, turn the number of lines down to 0 to enable this label to spread to the necessary number of text lines.  Constrain the UI elements appropriately.  Your `PostTableViewCell` should look similar to the one below.
+
+![Alt text](/Photos/storyboard2.png?raw=true "Storyboard 2")
+
+2. Create a `PostTableViewCell` class, subclass the tableView cell in your storyboard and add the appropriate IBOutlets.
+3. In your `PostTableViewCell` add a `post` variable, and implement an `updateViews` function to the `PostTableViewCell` to update the image view with the `Post`'s photo. Call the function in the didSet of the `post` variable
 3. Choose a height that will be used for your image cells. To avoid worrying about resizing images or dynamic cell heights, you may want to use a consistent height for all of the image views in the app.
 4. Implement the `UITableViewDataSource` functions
-    * note: The final app does not need to support any editing styles, but you may want to include support for editing while developing early stages of the app.
 5. Implement the `prepare(for segue: ...)` function to check the segue identifier, capture the detail view controller, index path, selected post, and assign the selected post to the detail view controller.
     * note: You may need to quickly add a `post` property to the `PostDetailTableViewController`.
 
