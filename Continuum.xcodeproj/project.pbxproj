@@ -18,6 +18,7 @@
 		F73AC99B21504AE20012A8DE /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73AC99A21504AE20012A8DE /* Comment.swift */; };
 		F73AC99E215054A00012A8DE /* PostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73AC99D215054A00012A8DE /* PostController.swift */; };
 		F73AC9A021505BB10012A8DE /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73AC99F21505BB10012A8DE /* PostTableViewCell.swift */; };
+		F7B94EEA2152D009008EB1CC /* SearchableRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B94EE92152D009008EB1CC /* SearchableRecord.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		F73AC99A21504AE20012A8DE /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		F73AC99D215054A00012A8DE /* PostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostController.swift; sourceTree = "<group>"; };
 		F73AC99F21505BB10012A8DE /* PostTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
+		F7B94EE92152D009008EB1CC /* SearchableRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchableRecord.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 			children = (
 				F73AC99821504ADD0012A8DE /* Post.swift */,
 				F73AC99A21504AE20012A8DE /* Comment.swift */,
+				F7B94EE92152D009008EB1CC /* SearchableRecord.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -202,6 +205,7 @@
 			files = (
 				F73AC9912150453B0012A8DE /* PostListTableViewController.swift in Sources */,
 				F73AC99B21504AE20012A8DE /* Comment.swift in Sources */,
+				F7B94EEA2152D009008EB1CC /* SearchableRecord.swift in Sources */,
 				F73AC97E215044280012A8DE /* AppDelegate.swift in Sources */,
 				F73AC9A021505BB10012A8DE /* PostTableViewCell.swift in Sources */,
 				F73AC997215046D60012A8DE /* AddPostTableViewController.swift in Sources */,

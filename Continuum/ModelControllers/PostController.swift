@@ -21,8 +21,10 @@ class PostController{
         post.comments.append(comment)
     }
     
-    func createPostWith(image: UIImage, comment: Comment){
+    func createPostWith(image: UIImage, captionText: String, completion: @escaping (Post) -> ()){
+        let comment = Comment(text: captionText, post: nil)
         let post = Post(photo: image, comments: [comment])
+        comment.post = post
         self.posts.append(post)
     }
 }

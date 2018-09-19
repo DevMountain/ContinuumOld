@@ -12,7 +12,13 @@ class PostListTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 350
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tableView.reloadData()
     }
 
     // MARK: - Table view data source
@@ -37,8 +43,9 @@ class PostListTableViewController: UITableViewController {
             let destinationVC = segue.destination as? PostDetailTableViewController
             guard let indexPath = tableView.indexPathForSelectedRow else {return}
             let post = PostController.shared.posts[indexPath.row]
-            destinationVC.post = post
+            destinationVC?.post = post
         }
     }
 
 }
+

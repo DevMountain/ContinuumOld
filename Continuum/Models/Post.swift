@@ -31,3 +31,14 @@ class Post{
     }
 }
 
+extension Post: SearchableRecord{
+    
+    func matches(searchTerm: String) -> Bool {
+        for comment in self.comments{
+            if comment.matches(searchTerm: searchTerm){
+                return true
+            }
+        }
+        return false
+    }
+}
