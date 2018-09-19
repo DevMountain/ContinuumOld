@@ -174,6 +174,16 @@ Until you implement the `UIImagePickerController`, you will use a staged static 
 7. Add a 'Cancel' `UIBarButtonItem` as the left bar button item. Implement the IBAction to bring the user back to the `PostListTableViewController` using the same line of code from step 6.
 8. Override `ViewDidDisappear` to reset the Select Image Button's title back to "Select Image" and reset the imageView's image to nil.
 
+#### A Note on Reusable Code
+
+Consider that this Photo Selection functionality could be useful in different views and in different applications. New developers will be tempted to copy and paste the functionality wherever it is needed. That amount of repetition should give you pause. _Don't repeat yourself_ (DRY) is a shared value among skilled software developers.
+
+Avoiding repetition is an important way to become a better developer and maintain sanity when building larger applications.
+
+Imagine a scenario where you have three classes with similar functionality. Each time you fix a bug or add a feature to any of those classes, you must go and repeat that in all three places. This commonly leads to differences, which leads to bugs.
+
+You will refactor the Photo Selection functionality (selecting and assigning an image) into a reusable child view controller in Part 2.
+
 ### Polish Rough Edges
 
 At this point you should be able view added post images in the Timeline Post List scene, add new `Post` objects from the Add Post Scene, add new `Comment` objects from the Post Detail Scene.  Your app will not persist or share data yet.
@@ -204,22 +214,18 @@ Consider how each model object will match to a specific search term. What search
 
 You can use a Playground to test your `SearchableRecord` and `matches(searchTerm: String)` functionality and understand what you are implementing.
 
-#### Search Results Controller
+#### PostListTableViewController: UISearchBar & UISearchBarDelegate
 
-Search controllers typically have two views: a list view, and a search result view that displays the filtered results. The list view holds the search bar. When the user begins typing in the search bar, the `UISSearchController` presents a search results view. Your list view must conform to the `SearchResultsUpdating` protocol function, which implements updates to the results view.
+Use a UISearchbar to allow a user to search through different posts for the given search text.  This will require the use of the of the `SearchableRecord` protocol and the each models implentation of the `matches(searchTerm: String)` function.  The `PostListTableViewController` will need to conform to the `UISearchBarDelegate` and implement the appropriate delegate method.
 
-Understanding Search Controllers requires you to understand that the main view controller can (and must) implement methods that handle what is being displayed on another view controller. The results controller must also implement a way to communicate back to the main list view controller to notify it of events. This is a two way relationship with communication happening in both directions.
-
-1. Create a `SearchResultsTableViewController` subclass of `UITableViewController` and assign it to the scene in Interface Builder.
-2. Add a `resultsArray` property that contains a list of `SearchableRecords`
-3. Implement the `UITableViewDataSource` functions to display the search results.   
-    * note: For now you will only display `Post` objects as a result of a search. Use the `PostTableViewCell` to do so.
-
-#### Update PostListTableViewController
-
-1. In the PostListTableViewController.swift, add a function `setUpSearchController` that captures the `resultsController` from the Storyboard, instantiates the `UISearchController`, sets the `searchResultsUpdater` to self, and adds the `searchController`'s `searchBar` as the table's header view.
-2. Implement the `UISearchResultsUpdating` protocol `updateSearchResults(for searchController: UISearchController)` function. The function should capture the `resultsViewController` and the search text from the `searchController`'s `searchBar`, filter the local `posts` array for posts that match, assign the filtered results to the `resultsViewController`'s `resultsArray`, and reload the `resultsViewController`'s `tableView`.
-    * note: Consider the communication that is happening here between two separate view controllers. Be sure that you understand this relationship.
+1. Add a `UISearchBar` to the headerView of the  `PostListTableViewController` scene in the main storyboard.  Check the `Shows Cancel Button` in the attributes inspector.  Create an IBOutlet from the search bar to the `PostListTableViewController` class.
+2. Add a `resultsArray` property in the `PostListTableViewController` class that contains an array of `SearchableRecords`
+3. Refactor the `UITableViewDataSource` methods to populate the tableView based on the `resultsArray`
+    * note: For now you will only display `Post` objects as a result of a search. Use the `PostTableViewCell` to do so.  In `cellForRowAt` function you will need to cast the data pulled out of the results array as a `Post`
+4. In `ViewWillAppear` set the results array equal to the `PostController.shared.posts`.
+5. Adopt the UISearchBarDelegate protocol, and implement the `searchBar(_:textDidChange:)` function.  Within the function filter the posts using the `Post` object's  `matches(searchTerm: String)` function and setting the `resultsArray` equal to the results of the filter.  Call `tableView.reloadData()` at the end of this function.
+6. Implement the `searchBarCancelButtonClicked(_ searchBar:)`  function, using it to set the results array equall to `PostController.shared.posts` then reload the table view.  You should also set the searchBar's text equal to an empty String and resign its first responder.  This will return the feed back to its normal state of displaying all posts when the user cancels a search.
+6. In `ViewDidLoad` set the Search Bar's delegate property equal to `self` 
 
 ##### Segue to Post Detail View
 
