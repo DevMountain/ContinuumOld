@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		01C6B281215415E600FBC26D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C6B280215415E600FBC26D /* CloudKit.framework */; };
+		01C6B28421541CFF00FBC26D /* Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C6B28321541CFF00FBC26D /* Extentions.swift */; };
 		F73AC97E215044280012A8DE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73AC97D215044280012A8DE /* AppDelegate.swift */; };
 		F73AC983215044280012A8DE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F73AC981215044280012A8DE /* Main.storyboard */; };
 		F73AC985215044290012A8DE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F73AC984215044290012A8DE /* Assets.xcassets */; };
@@ -24,6 +25,7 @@
 
 /* Begin PBXFileReference section */
 		01C6B280215415E600FBC26D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		01C6B28321541CFF00FBC26D /* Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extentions.swift; sourceTree = "<group>"; };
 		F73AC97A215044280012A8DE /* Continuum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Continuum.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F73AC97D215044280012A8DE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F73AC982215044280012A8DE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -61,6 +63,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		01C6B28221541CEA00FBC26D /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				01C6B28321541CFF00FBC26D /* Extentions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		F73AC971215044280012A8DE = {
 			isa = PBXGroup;
 			children = (
@@ -83,6 +93,7 @@
 			children = (
 				F73AC98F2150443C0012A8DE /* Continuum.entitlements */,
 				F73AC993215045540012A8DE /* Resources */,
+				01C6B28221541CEA00FBC26D /* Extensions */,
 				F73AC9922150453E0012A8DE /* ViewControllers */,
 				F73AC99C21504AE60012A8DE /* Models */,
 				F73AC9A121505BB50012A8DE /* ModelControllers */,
@@ -220,6 +231,7 @@
 			files = (
 				F73AC9912150453B0012A8DE /* PostListTableViewController.swift in Sources */,
 				F73AC99B21504AE20012A8DE /* Comment.swift in Sources */,
+				01C6B28421541CFF00FBC26D /* Extentions.swift in Sources */,
 				F7B94EEA2152D009008EB1CC /* SearchableRecord.swift in Sources */,
 				F73AC97E215044280012A8DE /* AppDelegate.swift in Sources */,
 				F73AC9A021505BB10012A8DE /* PostTableViewCell.swift in Sources */,
@@ -374,13 +386,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Continuum/Continuum.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = WAN4D79W79;
+				DEVELOPMENT_TEAM = 77U2457882;
 				INFOPLIST_FILE = "$(SRCROOT)/Continuum/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.nickReichard.Continuum;
+				PRODUCT_BUNDLE_IDENTIFIER = com.trevoradcock.Continuum;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -393,13 +405,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Continuum/Continuum.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = WAN4D79W79;
+				DEVELOPMENT_TEAM = 77U2457882;
 				INFOPLIST_FILE = "$(SRCROOT)/Continuum/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.nickReichard.Continuum;
+				PRODUCT_BUNDLE_IDENTIFIER = com.trevoradcock.Continuum;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
