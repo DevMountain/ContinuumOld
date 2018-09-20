@@ -16,6 +16,7 @@ class Post{
     fileprivate let timestampKey = "timestamp"
     fileprivate let photoDataKey = "photoData"
     
+    let recordID = CKRecord.ID(recordName: UUID().uuidString)
     var caption: String
     var photoData: Data?
     var timestamp: Date
@@ -54,6 +55,7 @@ class Post{
         }
     }
     
+    
     deinit {
         if let url = tempURL {
             do {
@@ -67,7 +69,7 @@ class Post{
 
 extension CKRecord {
     convenience init(_ post: Post) {
-        let recordID = CKRecord.ID(recordName: UUID().uuidString)
+        let recordID = post.recordID
         self.init(recordType: post.recordTypeKey, recordID: recordID)
         self.setValue(post.caption, forKey: post.captionKey)
         self.setValue(post.timestamp, forKey: post.timestampKey)

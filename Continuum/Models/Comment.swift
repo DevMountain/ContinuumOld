@@ -7,8 +7,14 @@
 //
 
 import Foundation
+import CloudKit
 
 class Comment{
+    
+    fileprivate let typeKey = "Comment"
+    fileprivate let textKey = "text"
+    fileprivate let timestampKey = "timstamp"
+    fileprivate let postReferenceKey = "postReference"
     
     var text: String
     var timestamp: Date
@@ -18,6 +24,15 @@ class Comment{
         self.text = text
         self.timestamp = timestamp
         self.post = post
+    }
+}
+
+extension CKRecord {
+    convenience init(_ comment: Comment) {
+        let recordID = CKRecord.ID(recordName: UUID().uuidString)
+        self.init(recordType: comment.typeKey, recordID: recordID)
+        self.setValue(comment.text, forKey: comment.typeKey)
+        self.setValue(comment.timestamp, forKey: comment.timestampKey)
     }
 }
 
