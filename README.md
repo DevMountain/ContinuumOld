@@ -357,9 +357,9 @@ It looks like this:
         }
     }
 ```
-The whole point of the above computed property is to read and write for our photo property. Look up `CKAsset`, it can only take a fileURL. We want to create a temorary file url so we can write to it. Once we are done using the temp url, have to remove it otherwise it can drain our memory. The TemoraryDirecorty comes from FileMnager and there is already a shared method that can remove the temp url. 
+The whole point of the above computed property is to read and write for our photo property. Look up `CKAsset`, it can only take a fileURL. We want to create a temorary file url so we can write to it. Once we are done using the temp url, we have to remove it otherwise it can drain our memory. The TemoraryDirecorty comes from FileMnager and there is already a shared method that can remove the temp url. 
    - 2.3. Remove the temporary file
-```    deinit {
+```deinit {
         if let url = tempURL {
             do {
                 try FileManager.default.removeItem(at: url)
@@ -384,6 +384,56 @@ Remember that a `Comment` should not exist without a `Post`. When a `Comment` is
 
 ### Update the Post Controller for CloudKit functionality
 
+## Checking to see if the user is sigined into iCloud
+
+If the user isn't singed into their iCloud account, they are going to have a bad time using our app. BIG TIME BOARING, because most of the features wouldn't fully work. How could we let the user know that they are not signed into iCloud? If they are signed into iCloud, we want the app to continue as usual. Take a moment and think about this, if it the user is signed in 'do something' if the user isn't signed in do something else. What would our function signature look like? 
+
+This is going to be an asyc call to check the accountStatus of a iPhone user. `CKContainer` has accountStatus fuction that can check the users status. There are 4 options, for `CKAccountStatus`. This is a great time to use a switch statment on the status inside the closure. Handel each case statment and completions. If you didn't see this coming already we need a `@escaping` completion closure to handel the events if the user is signed in or not. If the competion is false we can call another function within this fuction or present an alert and notify the user that they are not signed in. You'll want to Dispatch the alert on the main thread. 
+
+Take a moment and try this on your own if you get stuck here is the code. 
+<details><summary>Account Status #1</summary><br>
+    
+    ```func checkAccountStatus(completion: @escaping (_ isLoggedIn: Bool) -> Void) {
+        CKContainer.default().accountStatus { [weak self] (status, error) in
+            if let error = error {
+                print("Error checking accountStatus \(error) \(error.localizedDescription)")
+                completion(false); return
+            } else {
+                let errrorText = "Sing in to iCloud in Settings"
+                switch status {
+                case .available:
+                   completion(true)
+                case .noAccount:
+                    let noAccount = "No account found"
+                    self?.presentErrorAlert(errorTitle: errrorText, errorMessage: noAccount)
+                    completion(false)
+                case .couldNotDetermine:
+                    self?.presentErrorAlert(errorTitle: errrorText, errorMessage: "Error with iCloud account status")
+                    completion(false)
+                case .restricted:
+                    self?.presentErrorAlert(errorTitle: errrorText, errorMessage: "Restricted iCloud account")
+                    completion(false)
+                }
+            }
+        }
+    }
+    ```
+    
+    func presentErrorAlert(errorTitle: String, errorMessage: String) {
+        DispatchQueue.main.async {
+            if let appDelegate = UIApplication.shared.delegate,
+                let appWindow = appDelegate.window!,
+                let rootViewController = appWindow.rootViewController {
+                rootViewController.showAlertMessage(titleStr: errorTitle, messageStr: errorMessage)
+            }
+        }
+    }
+</details>
+
+You should be getting an error if you copied this code. Good, because you chose to copy and paste, reasearch for 10 minutes on how to add your own alert mesage to any `UIViewController`. 
+
+The accountStatus method is an async call thats why we want to Dispatch the alart on the main thread once we call the presentErrorAlert function insde the checkAccountStatus function.
+
 #### Saving Records
 
 Update the `PostController` to support pushing and pulling data from CloudKit.
@@ -395,6 +445,8 @@ This is where we are going to be saving and fetching our data.
 2. Update the `addCommentToPost` function to to create a `CKRecord` using the computed property you created, and call the `cloudKitManager.saveRecord` function. Use the completion closure to set the `cloudKitRecordID` property on the `Comment` to persist the `CKRecordID`.
 
 At this point, each new `Post` or `Comment` should be pushed to CloudKit when new instances are created from the Add Post or Post Detail scenes.
+
+
 
 #### Fetching Records
 
