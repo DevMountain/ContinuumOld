@@ -13,18 +13,19 @@ class PostController{
     
     static let shared = PostController()
     private init() {}
+    let publicDB = CKContainer.default().publicCloudDatabase
     
     var posts = [Post]()
+    
     
     func addComment(_ text: String, to post: Post, completion: (Comment) -> ()){
         let comment = Comment(text: text, post: post)
         post.comments.append(comment)
     }
     
-    func createPostWith(image: UIImage, captionText: String, completion: @escaping (Post) -> ()){
-        let comment = Comment(text: captionText, post: nil)
-        let post = Post(photo: image, comments: [comment])
-        comment.post = post
+    func createPostWith(captionText: String, photo: UIImage, completion: @escaping (Post) -> ()){
+        let post = Post(caption: captionText, photo: photo)
+
         self.posts.append(post)
     }
 }
