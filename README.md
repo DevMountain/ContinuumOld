@@ -326,47 +326,59 @@ You will implement push notifications, subscriptions, and basic automatic sync f
 
 ### CloudKit Manager
 
-Add a CloudKit Manager that abstracts your CloudKit code into a single helper class that implements basic CloudKit functionality. You will not necessarily use all of the `CloudKitManager` functionality in this application, but this will be a great reusable class for CloudKit applications that you build in the future.
-
-1. Add a `CloudKitManager` Swift file.
-2. Copy the class in the CloudKitManager.swift file in this repository and paste it in your CloudKitManager.swift file
+Ask your instructor about what the CloudKit Manager was used for and why we took it out. It's a good code achitecture, however difficult to grasp in one week. Abstraction is an important concept to grasp. The CloudKit Manager abstracts CloudKit code into a single helper class that implements basic CloudKit functionality. You are welcome to make a CloudKit Manager if you’ve used abstraction in other programming languages. 
 
 ### Update Post for CloudKit functionality
 
 1. Add a computed property `recordType` and return the type you would like used to identify 'Post' objects in CloudKit. (Note: this is simply so that you don't have to write `Post.typeKey` a bunch of times within the scope of this class, and instead simply write `recordType`.)
+2. Add a recordID property that is equal to a 'CKRecord.ID' with a default value of a uuidString. 
 
-2. To save your photo to CloudKit, it must be stored as a `CKAsset`. `CKAsset`s must be initialized with a file path URL. In order to accomplish this, you need to create a variable `temporaryPhotoURL` that copies the contents of the `photoData: NSData?` property to a file in a temporary directory and returns the URL to the file. It looks like this:
+3. To save your photo to CloudKit, it must be stored as a `CKAsset`. `CKAsset`s must be initialized with a file path URL. In order to accomplish this, you need to create a temporaryDirecory that copies the contents of the `photoData: Data?` property to a file in a temporary directory and returns the URL to the file. This is going to be a 3 step process.
+
+  - 2.1. Save the image temporarily to disk
+  - 2.2. Create the CKAsset
+  - 2.3. Delete the temporary file
+
+It looks like this:
 
 ```swift
-private var temporaryPhotoURL: URL {
-
-// Must write to temporary directory to be able to pass image file path url to CKAsset
-
-let temporaryDirectory = NSTemporaryDirectory()
-let temporaryDirectoryURL = URL(fileURLWithPath: temporaryDirectory)
-let fileURL = temporaryDirectoryURL.appendingPathComponent(UUID().uuidString).appendingPathExtension("jpg")
-
-try? photoData?.write(to: fileURL, options: [.atomic])
-
-return fileURL
-}
+    var imageAsset: CKAsset? {
+        get {
+            let tempDirectory = NSTemporaryDirectory()
+            let tempDirecotryURL = URL(fileURLWithPath: tempDirectory)
+            let fileURL = tempDirecotryURL.appendingPathComponent(UUID().uuidString).appendingPathExtension("jpg")
+            self.tempURL = fileURL
+            do {
+                try photoData?.write(to: fileURL)
+            } catch let error {
+                print("Error writing to temp url \(error) \(error.localizedDescription)")
+            }
+            return CKAsset(fileURL: fileURL)
+        }
+    }
 ```
+The whole point of the above computed property is to read and write for our photo property. Look up `CKAsset`, it can only take a fileURL. We want to create a temorary file url so we can write to it. Once we are done using the temp url, have to remove it otherwise it can drain our memory. The TemoraryDirecorty comes from FileMnager and there is already a shared method that can remove the temp url. 
+   - 2.3. Remove the temporary file
+```    deinit {
+        if let url = tempURL {
+            do {
+                try FileManager.default.removeItem(at: url)
+            } catch let error {
+                print("Error deleting temp file, or may cause memory leak: \(error)")
+            }
+        }
+    }
+ ```
+      * note: `CKAsset` is initialized with a URL. When creating a `CKAsset` on the local device, you initialize it with a URL to a local file path where the photo is located on disk. When you save a `CKAsset`, the data at that file path is uploaded to CloudKit. When you pull a `CKAsset` from CloudKit, the URL will point to the remotely stored data.
 
-3. Add a `cloudKitRecordID` property of type `CKRecordID?`. This will allow us to create a `CKReference` to the post from its comments.
-4. Add `cloudKitRecord` computed property that returns `CKRecord`. When you initialize the `CKRecord`, check if the post's `cloudKitRecordID` has a value. Use that as the records `CKRecordID`, otherwise, just create a `CKRecordID` with a new UUID string. The record should include the `timestamp` and a `CKAsset` that points to a URL of the photo data.
-    * note: `CKAsset` is initialized with a URL. When creating a `CKAsset` on the local device, you initialize it with a URL to a local file path where the photo is located on disk. When you save a `CKAsset`, the data at that file path is uploaded to CloudKit. When you pull a `CKAsset` from CloudKit, the URL will point to the remotely stored data.
+4. Add a computed property `recordType` and return the type you would like used to identify 'Post' objects in CloudKit. (Note: this is simply so that you don't have to write `Comment.typeKey` a bunch of times within the scope of this class, and instead simply write `recordType`.)
+5.Add an extention on CKRecord that will set create the CKRecord.ID of a 'Post' object and set each value. It will need the required convenience initializer `init?(record: CKRecord)`.
 
-5. Add the required convenience initializer `init?(record: CKRecord)`.
-6. Implement the convenience initializer by guarding for the timestamp and photo data, calling the designated (memberwise) initializer, then setting the `cloudKitRecordID` property.
 
 ### Update Comment for CloudKit Functionality
 
 1. Add a computed property `recordType` and return the type you would like used to identify 'Comment' objects in CloudKit. (Note: this is simply so that you don't have to write `Comment.typeKey` a bunch of times within the scope of this class, and instead simply write `recordType`.)
-2. Add `cloudKitRecord` computed property that returns `CKRecord`. When you initialize the `CKRecord`, check if the comment's `cloudKitRecordID` has a value. Use that as the records `CKRecordID`, otherwise, just create a `CKRecordID` with a new UUID string. The record should include the `timestamp`, `text`, and a `CKReference` to the `Comment`'s `Post`'s `CKRecord`.
-    * note: You will need to guard for the `Comment`'s `Post` and the `Post`'s `cloudKitRecord` to be able to initialize the `CKReference`.
-    
-3. Add the required convenience initializer `init?(record: CKRecord)`.
-4. Implement the convenience initializer by guarding for the timestamp and post reference, calling the designated (memberwise) initializer, then setting the `cloudKitRecordID` property.
+2.Add an extention on CKRecord that will set create the CKRecord.ID of a 'Comment' object and set each value. It will need the required convenience initializer `init?(record: CKRecord)`. and set each property. Add fileprivate strings for your keys to keep your code safe. 
 
 Remember that a `Comment` should not exist without a `Post`. When a `Comment` is created from a `CKRecord`, you will also need to set the new comment's `Post` property. Consider how you would approach this. We will address it in the next section.
 
@@ -374,9 +386,12 @@ Remember that a `Comment` should not exist without a `Post`. When a `Comment` is
 
 #### Saving Records
 
-Update the `PostController` to support pushing and pulling data from CloudKit using the `CloudKitManager` class.
+Update the `PostController` to support pushing and pulling data from CloudKit.
 
-1. Update the `createPost` function to create a `CKRecord` using the computed property you created, and call the `cloudKitManager.saveRecord` function. Use the completion closure to set the `cloudKitRecordID` property on the `Post` to persist the `CKRecordID`. Without doing this, the references on this post's comments will not work.
+This is where we are going to be saving and fetching our data. 
+``` let publicDB = CKContainer.default().publicCloudDatabase ```
+
+1. Update the `createPost` function to create a `CKRecord` using your create function that you made eariler. 
 2. Update the `addCommentToPost` function to to create a `CKRecord` using the computed property you created, and call the `cloudKitManager.saveRecord` function. Use the completion closure to set the `cloudKitRecordID` property on the `Comment` to persist the `CKRecordID`.
 
 At this point, each new `Post` or `Comment` should be pushed to CloudKit when new instances are created from the Add Post or Post Detail scenes.
