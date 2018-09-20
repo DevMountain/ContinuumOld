@@ -43,7 +43,7 @@ class Post{
         get {
             let tempDirectory = NSTemporaryDirectory()
             let tempDirecotryURL = URL(fileURLWithPath: tempDirectory)
-            let fileURL = tempDirecotryURL.appendingPathComponent(UUID().uuidString).appendingPathComponent("jpg")
+            let fileURL = tempDirecotryURL.appendingPathComponent(UUID().uuidString).appendingPathExtension("jpg")
             self.tempURL = fileURL
             do {
                 try photoData?.write(to: fileURL)

@@ -23,9 +23,15 @@ class PostController{
         post.comments.append(comment)
     }
     
-    func createPostWith(captionText: String, photo: UIImage, completion: @escaping (Post) -> ()){
+    func createPostWith(captionText: String, photo: UIImage, completion: @escaping (Post?) -> ()){
         let post = Post(caption: captionText, photo: photo)
-
         self.posts.append(post)
+        publicDB.save(CKRecord(post)) { (_, error) in
+            if let error = error {
+                print("Error saving post record \(error) \(error.localizedDescription)")
+                completion(nil);return
+            }
+            completion(post)
+        }
     }
 }

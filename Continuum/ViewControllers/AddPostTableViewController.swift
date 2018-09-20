@@ -37,7 +37,11 @@ class AddPostTableViewController: UITableViewController {
     
     @IBAction func addPostButtonTapped(_ sender: Any) {
         guard let photo = photoImageView.image, let caption = captionTextField.text, !caption.isEmpty else {return}
-        PostController.shared.createPostWith(captionText: caption, photo: photo) { (_) in
+        PostController.shared.createPostWith(captionText: caption, photo: photo) { (post) in
+            DispatchQueue.main.async {
+                self.captionTextField.text = post?.caption
+                self.photoImageView.image = post?.photo
+            }
         }
         self.tabBarController?.selectedIndex = 0
     }
