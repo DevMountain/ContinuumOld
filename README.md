@@ -470,7 +470,7 @@ At this point you should be able to save a post record and see it in your CloudK
 
 This proccess is called "Backreferencing". Where the lower object (Comment) points pack to its parent (Post). 
 
-Here is the code for the exteiong of `CKRecord` for `Comment` if you get stuck. 
+Here is the code for the extention of `CKRecord` for `Comment` if you get stuck. 
 
 <details><summary> CKRecord for Comment </summary><br>
 
