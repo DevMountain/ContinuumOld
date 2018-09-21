@@ -87,7 +87,11 @@ class PostDetailTableViewController: UITableViewController {
     }
     
     @IBAction func shareButtonTapped(_ sender: Any) {
-        
+        guard let post = post, let photo = post.photo else {return}
+        let activityViewController = UIActivityViewController(activityItems: [photo, post.caption], applicationActivities: nil)
+        DispatchQueue.main.async {
+            self.present(activityViewController, animated: true)
+        }
     }
     
     @IBAction func followButtonTapped(_ sender: Any) {

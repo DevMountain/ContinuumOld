@@ -81,6 +81,11 @@ extension CKRecord {
 extension Post: SearchableRecord{
     
     func matches(searchTerm: String) -> Bool {
+        
+        if caption.lowercased().contains(searchTerm.lowercased()){
+            return true
+        }
+        
         for comment in self.comments{
             if comment.matches(searchTerm: searchTerm){
                 return true
