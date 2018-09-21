@@ -303,9 +303,9 @@ You have declared a protocol, adopted the protocol, but you now must assign the 
 
 Use the `UIActivityController` class to present a share sheet from the Post Detail view. Share the image and the text of the first comment.
 
-1. Add an IBAction from the Share button in your `PostDetailTableViewController`.
-2. Initialize a `UIActivityController` with the `Post`'s image and the text of the first comment as the shareable objects.
-3. Present the `UIActivityController`.
+1. Add an IBAction from the Share button in your `PostDetailTableViewController` if you have not already.
+2. Initialize a `UIActivityViewController` with the `Post`'s image and the text of the first comment as the shareable objects.
+3. Present the `UIActivityViewController`.
 
 ### Black Diamonds:
 
