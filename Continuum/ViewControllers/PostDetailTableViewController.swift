@@ -68,11 +68,15 @@ class PostDetailTableViewController: UITableViewController {
         
         
         let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
-            guard let commentText = alertController.textFields?.first?.text, let post = self.post else {return}
+            guard var commentText = alertController.textFields?.first?.text, let post = self.post else {return}
             guard !commentText.isEmpty else {return}
-            PostController.shared.addComment(commentText, to: post, completion: { (_) in
+            PostController.shared.addComment(commentText, to: post, completion: { (comment) in
+                DispatchQueue.main.async {
+                    guard let comment = comment else { return }
+                    commentText = comment.text
+                    self.tableView.reloadData()
+                }
             })
-            self.tableView.reloadData()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         

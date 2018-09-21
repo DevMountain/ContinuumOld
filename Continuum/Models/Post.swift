@@ -11,7 +11,7 @@ import CloudKit
 
 class Post{
     
-    fileprivate let recordTypeKey = "Post"
+    let recordTypeKey = "Post"
     fileprivate let captionKey = "caption"
     fileprivate let timestampKey = "timestamp"
     fileprivate let photoDataKey = "photoData"

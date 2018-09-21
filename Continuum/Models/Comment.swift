@@ -11,11 +11,12 @@ import CloudKit
 
 class Comment{
     
-    fileprivate let typeKey = "Comment"
+    let typeKey = "Comment"
     fileprivate let textKey = "text"
     fileprivate let timestampKey = "timstamp"
     fileprivate let postReferenceKey = "postReference"
     
+    let recordID = CKRecord.ID(recordName: UUID().uuidString)
     var text: String
     var timestamp: Date
     weak var post: Post?
@@ -29,10 +30,13 @@ class Comment{
 
 extension CKRecord {
     convenience init(_ comment: Comment) {
-        let recordID = CKRecord.ID(recordName: UUID().uuidString)
-        self.init(recordType: comment.typeKey, recordID: recordID)
+        guard let post = comment.post else {
+            fatalError("Comment does not have a Post relationship")
+        }
+        self.init(recordType: comment.typeKey, recordID: comment.recordID)
         self.setValue(comment.text, forKey: comment.typeKey)
         self.setValue(comment.timestamp, forKey: comment.timestampKey)
+        self.setValue(CKRecord.Reference(recordID: post.recordID, action: .deleteSelf), forKey: comment.postReferenceKey)
     }
 }
 
