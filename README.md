@@ -250,8 +250,10 @@ Try to work through the Search segue without looking at the solution code. Under
 
 Implement the Image Picker Controller in place of the prototype functionality you built previously.
 
-1. Update the 'Select Image' IBAction to present a `UIImagePickerController`. Give the user the option to select from their Photo Library or from the device's camera if their device has one.
-2. Implement the `UIImagePickerControllerDelegate` function to capture the selected image and assign it to the image view.
+1. Update the 'Select Image' IBAction to present an `UIAlertController` with an `actionSheet` style which will allow the user to select from picking an image in their photo library or directly from their camera.
+2.  Implement  `UIImagePickerController` to access the phones photo library or camera.  Check to make sure each `UIImagePickerController.SourceType` is available, and for each that is add the appropriate action to the `UIAlertController` above.
+3. Implement the `UIImagePickerControllerDelegate` function to capture the selected image and assign it to the image view.
+Please read through the documentation for [UIImagePickerController](https://developer.apple.com/documentation/uikit/uiimagepickercontroller) and its [delegate](https://developer.apple.com/documentation/uikit/uiimagepickercontrollerdelegate)
 
 ### Reduce Code Repetition
 
