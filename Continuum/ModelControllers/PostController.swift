@@ -25,7 +25,7 @@ class PostController{
                 print("Error checking accountStatus \(error) \(error.localizedDescription)")
                 completion(false); return
             } else {
-                let errrorText = "Sing in to iCloud in Settings"
+                let errrorText = "Sign into iCloud in Settings"
                 switch status {
                 case .available:
                    completion(true)
@@ -71,6 +71,25 @@ class PostController{
                 completion(nil);return
             }
             completion(post)
+        }
+    }
+    
+    func addSubscritptionTO(commentsForPost post: Post, alertBody: String?, completion: ((Bool, Error) -> ())?){
+        let postRecordID = post.recordID
+        
+        //Might need to change this predicate
+        let predicate = NSPredicate(format: "post = %@", postRecordID)
+        let subscription = CKQuerySubscription(recordType: post.recordTypeKey, predicate: predicate, subscriptionID: UUID().uuidString, options: .firesOnRecordCreation)
+        let notificationInfo = CKSubscription.NotificationInfo()
+        notificationInfo.alertBody = "A new comment was added a a post you follow!"
+        notificationInfo.shouldSendContentAvailable = true
+        notificationInfo.desiredKeys = nil
+       subscription.notificationInfo = notificationInfo
+        
+        publicDB.save(subscription) { (_, error) in
+            if let error = error {
+                print("💩  There was an error in \(#function) ; \(error)  ; \(error.localizedDescription)  💩")
+            }
         }
     }
 }
