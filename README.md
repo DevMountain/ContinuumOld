@@ -454,12 +454,12 @@ The function signature looks like so. It's asking for a `CKRecord`, so lets give
     ```func save(CKRecord, completionHandler: (CKRecord?, Error?) -> Void)```
 That was the point of making an extention on CKRecord. It makes it realy easy to creat an instance of post and turn a post into a CKReocrd. Look how cool this is! 
     
-    ![screen shot 2018-09-21 at 9 50 30 am](https://user-images.githubusercontent.com/23179585/45892014-378b2a00-bd84-11e8-88f8-36f74b8172a0.png)
+![Alt text](/Photos/CKRecordExtention.png?raw=true "CkRecord")
 
 In Borat's voice "Very nice".  
 
 At this point you should be able to save a post record and see it in your CloudKit dashboard. You dashboard should look similar to this. 
-![screen shot 2018-09-21 at 10 16 01 am](https://user-images.githubusercontent.com/23179585/45893134-7f5f8080-bd87-11e8-9f08-c738cd4c19c2.png)
+![Alt text](/Photos/dashboard.png?raw=true "CkRecord")
 
 
 2. Update the `addCommentToPost` function to to create a `CKRecord` using the computed property you created, and call the `cloudKitManager.saveRecord` function. Use the completion closure to set the `cloudKitRecordID` property on the `Comment` to persist the `CKRecordID`.
