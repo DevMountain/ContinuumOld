@@ -250,8 +250,10 @@ Try to work through the Search segue without looking at the solution code. Under
 
 Implement the Image Picker Controller in place of the prototype functionality you built previously.
 
-1. Update the 'Select Image' IBAction to present a `UIImagePickerController`. Give the user the option to select from their Photo Library or from the device's camera if their device has one.
-2. Implement the `UIImagePickerControllerDelegate` function to capture the selected image and assign it to the image view.
+1. Update the 'Select Image' IBAction to present an `UIAlertController` with an `actionSheet` style which will allow the user to select from picking an image in their photo library or directly from their camera.
+2.  Implement  `UIImagePickerController` to access the phones photo library or camera.  Check to make sure each `UIImagePickerController.SourceType` is available, and for each that is add the appropriate action to the `UIAlertController` above.
+3. Implement the `UIImagePickerControllerDelegate` function to capture the selected image and assign it to the image view.
+Please read through the documentation for [UIImagePickerController](https://developer.apple.com/documentation/uikit/uiimagepickercontroller) and its [delegate](https://developer.apple.com/documentation/uikit/uiimagepickercontrollerdelegate)
 
 ### Reduce Code Repetition
 
@@ -265,7 +267,7 @@ In this instance, you will put 'Select Photo' button, the image view, and the co
 
 Use a container view to embed a child view controller into the Add Post scene.
 
->Container View defines a region within a view controller's view subgraph that can include a child view controller. Create an embed segue from the container view to the child view controller in the storyboard.
+> A Container View defines a region within a view controller's view subgraph that can include a child view controller. Create an embed segue from the container view to the child view controller in the storyboard.
 
 1. Open `Main.storyboard` to your Add Post scene.
 2. Add a new section to the static table view to build the Container View to embed the child view controller.
@@ -301,9 +303,9 @@ You have declared a protocol, adopted the protocol, but you now must assign the 
 
 Use the `UIActivityController` class to present a share sheet from the Post Detail view. Share the image and the text of the first comment.
 
-1. Add an IBAction from the Share button in your `PostDetailTableViewController`.
-2. Initialize a `UIActivityController` with the `Post`'s image and the text of the first comment as the shareable objects.
-3. Present the `UIActivityController`.
+1. Add an IBAction from the Share button in your `PostDetailTableViewController` if you have not already.
+2. Initialize a `UIActivityViewController` with the `Post`'s image and the text of the first comment as the shareable objects.
+3. Present the `UIActivityViewController`.
 
 ### Black Diamonds:
 
