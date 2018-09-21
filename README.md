@@ -337,7 +337,7 @@ Ask your instructor about what the CloudKit Manager was used for and why we took
 
   - 2.1. Save the image temporarily to disk
   - 2.2. Create the CKAsset
-  - 2.3. Delete the temporary file
+  - 2.3. Remove the temporary file
 
 It looks like this:
 
@@ -391,7 +391,7 @@ If the user isn't singed into their iCloud account, they are going to have a bad
 This is going to be an asyc call to check the accountStatus of a iPhone user. `CKContainer` has accountStatus fuction that can check the users status. There are 4 options, for `CKAccountStatus`. This is a great time to use a switch statment on the status inside the closure. Handel each case statment and completions. If you didn't see this coming already we need a `@escaping` completion closure to handel the events if the user is signed in or not. If the competion is false we can call another function within this fuction or present an alert and notify the user that they are not signed in. You'll want to Dispatch the alert on the main thread. 
 
 Take a moment and try this on your own if you get stuck here is the code. 
-<details><summary>Account Status #1</summary><br>
+<details><summary> Account Status Code Snipit </summary><br>
     
     ```func checkAccountStatus(completion: @escaping (_ isLoggedIn: Bool) -> Void) {
         CKContainer.default().accountStatus { [weak self] (status, error) in
@@ -441,11 +441,28 @@ Update the `PostController` to support pushing and pulling data from CloudKit.
 This is where we are going to be saving and fetching our data. 
 ``` let publicDB = CKContainer.default().publicCloudDatabase ```
 
-1. Update the `createPost` function to create a `CKRecord` using your create function that you made eariler. 
+1. Update the `createPost` function to create a `CKRecord` using your create function that you made eariler. Documentation on this is REALLY GOOD and its easy! Do you remember what is at the highest level of CloudKit? It's highest level starts with `CKContainer`, a container has 3 databases. All 3 databases have methods. Lets walk through this sep by step.
+
+    - 1.1 - Plug in `CKContainer` in documentation. Re-read the intro if you don't know what it is. 
+    - 1.2 - Scroll through and click on `CKDatabase`
+    - 1.3 - Search for a save method. You should see 3 options. Which one do we want? What are we saving? What is the heart of CloudKit?
+    #### CKRecords! Are the heart of cloudKit. If you save an object, it must be a CKRecord. If you fetch an object, it must be a CKRecord. Drill that in your head, or you'll NSCashe me outside. 
+    
+The function signature looks like so. It's asking for a `CKRecord`, so lets give it a `CKRecord`. 
+    ```func save(CKRecord, completionHandler: (CKRecord?, Error?) -> Void)```
+That was the point of making an extention on CKRecord. It makes it realy easy to creat an instance of post and turn a post into a CKReocrd. Look how cool this is! 
+    
+    ![screen shot 2018-09-21 at 9 50 30 am](https://user-images.githubusercontent.com/23179585/45892014-378b2a00-bd84-11e8-88f8-36f74b8172a0.png)
+
+In Borat's voice "Very nice".  
+
+At this point you should be able to save a post record and see it in your CloudKit dashboard. You dashboard should look similar to this. 
+![screen shot 2018-09-21 at 10 16 01 am](https://user-images.githubusercontent.com/23179585/45893134-7f5f8080-bd87-11e8-9f08-c738cd4c19c2.png)
+
+
 2. Update the `addCommentToPost` function to to create a `CKRecord` using the computed property you created, and call the `cloudKitManager.saveRecord` function. Use the completion closure to set the `cloudKitRecordID` property on the `Comment` to persist the `CKRecordID`.
 
 At this point, each new `Post` or `Comment` should be pushed to CloudKit when new instances are created from the Add Post or Post Detail scenes.
-
 
 
 #### Fetching Records
