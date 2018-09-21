@@ -69,6 +69,7 @@ class PostController{
         }
     }
     
+<<<<<<< HEAD
     func addComment(_ text: String, to post: Post, completion: @escaping (Comment?) -> ()){
         let comment = Comment(text: text, post: post)
         post.comments.append(comment)
@@ -83,7 +84,7 @@ class PostController{
     
     }
     
-    
+=======
     func addSubscritptionTO(commentsForPost post: Post, alertBody: String?, completion: ((Bool, Error) -> ())?){
         let postRecordID = post.recordID
         
@@ -102,4 +103,5 @@ class PostController{
             }
         }
     }
+>>>>>>> dbd48c1907557df1e5567f1da88c507f8c68600a
 }

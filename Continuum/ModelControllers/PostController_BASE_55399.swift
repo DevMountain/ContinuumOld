@@ -25,7 +25,7 @@ class PostController{
                 print("Error checking accountStatus \(error) \(error.localizedDescription)")
                 completion(false); return
             } else {
-                let errrorText = "Sign into iCloud in Settings"
+                let errrorText = "Sing in to iCloud in Settings"
                 switch status {
                 case .available:
                    completion(true)
@@ -52,10 +52,15 @@ class PostController{
                 rootViewController.showAlertMessage(titleStr: errorTitle, messageStr: errorMessage)
             }
         }
-        
     }
     
     // MARK: - Create
+    
+    
+    func addComment(_ text: String, to post: Post, completion: (Comment) -> ()){
+        let comment = Comment(text: text, post: post)
+        post.comments.append(comment)
+    }
     
     func createPostWith(captionText: String, photo: UIImage, completion: @escaping (Post?) -> ()){
         let post = Post(caption: captionText, photo: photo)
@@ -66,40 +71,6 @@ class PostController{
                 completion(nil);return
             }
             completion(post)
-        }
-    }
-    
-    func addComment(_ text: String, to post: Post, completion: @escaping (Comment?) -> ()){
-        let comment = Comment(text: text, post: post)
-        post.comments.append(comment)
-        
-        publicDB.save(CKRecord(comment)) { (record, error) in
-            if let error = error {
-                print("Error saving Comment: \(error) \(error.localizedDescription)")
-                completion(nil);return
-            }
-            completion(comment)
-        }
-    
-    }
-    
-    
-    func addSubscritptionTO(commentsForPost post: Post, alertBody: String?, completion: ((Bool, Error) -> ())?){
-        let postRecordID = post.recordID
-        
-        //Might need to change this predicate
-        let predicate = NSPredicate(format: "post = %@", postRecordID)
-        let subscription = CKQuerySubscription(recordType: post.recordTypeKey, predicate: predicate, subscriptionID: UUID().uuidString, options: .firesOnRecordCreation)
-        let notificationInfo = CKSubscription.NotificationInfo()
-        notificationInfo.alertBody = "A new comment was added a a post you follow!"
-        notificationInfo.shouldSendContentAvailable = true
-        notificationInfo.desiredKeys = nil
-       subscription.notificationInfo = notificationInfo
-        
-        publicDB.save(subscription) { (_, error) in
-            if let error = error {
-                print("💩  There was an error in \(#function) ; \(error)  ; \(error.localizedDescription)  💩")
-            }
         }
     }
 }

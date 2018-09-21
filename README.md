@@ -107,11 +107,7 @@ Add and implement the `PostController` class that will be used for CRUD operatio
 4. Add an `addComment` function that takes a `text` parameter as a `String`, and a `Post` parameter. This should return a Comment object in a completion closure.
 * _For now this function will only initialize a new comment and append it to the given post's comments array._
 5. Add a `createPostWith` function that takes an image parameter as a `UIImage` and a caption as a `String`. This should return a Post object in a completion closure.  
-6. The function will need to:
-* initialize a comment from the caption text
-* initalize a post from the image and new comment
-* Set the new post equal to the comments `weak var post` property 
-* Append the post to the `PostController`s  `posts` property (think source of truth)
+6. The function will need to initalize a post from the image and new comment and append the post to the `PostController`s  `posts` property (think source of truth)
 
 _Note: These CRUD functions will only work locally right now.  We will integrate Cloudkit further along in the project_
 
@@ -434,7 +430,7 @@ Take a moment and try this on your own if you get stuck here is the code.
 
 You should be getting an error if you copied this code. Good, because you chose to copy and paste, reasearch for 10 minutes on how to add your own alert mesage to any `UIViewController`. 
 
-The accountStatus method is an async call thats why we want to Dispatch the alart on the main thread once we call the presentErrorAlert function insde the checkAccountStatus function.
+The `accountStatus` method is an async call thats why we want to Dispatch the alert on the main thread once we call the `presentErrorAlert` function insde the `checkAccountStatus` function.
 
 #### Saving Records
 
@@ -551,11 +547,6 @@ Implement Subscriptions and push notifications to create a simple automatic sync
 
 When you finish this part, the app will support syncing photos, posts, and comments from remote notifications generated when new records are created in CloudKit. This will allow all devices that have given permission for remote notifications the ability to sync new posts and comments automatically. When new posts or comments are created in CloudKit, they will be serialized into model objects, and the UI will update with the new data.
 
-
-### Add Subscription Support to the CloudKitManager
-
-Build functionality into your `CloudKitManager` that can be used to manage subscriptions and push notifications. Add support for adding a subscription, fetching a single subscription, fetching all subscriptions, and deleting a subscription.
-
 ### PostController Subscription Based Sync
 
 Update the `PostController` class to manage subscriptions for new posts and new comments on followed posts. Add functions for following and unfollowing individual posts.
@@ -575,7 +566,7 @@ Create and save a subscription for all new `Post` records.
 
 Create and save a subscription for all new `Comment` records that point to a given `Post`
 
-1. Add a function `addSubscriptionTo(commentsForPost post: ...)` that takes a `Post` parameter, an optional `alertBody` `String` parameter, and an optional completion closure with `success` `Bool` and `error` `Error` parameters.
+1. Add a function `addSubscriptionTo(commentsForPost post: ...)` that takes a `Post` parameter, an optional 'alertBody' `String?` parameter, and an optional completion closure wich takes in a `Bool` and `Error` parameters.
 2. Implement the function by using the `CloudKitManager` to subscribe to newly created `Comment` records that point to the `post` parameter. Run the completion closure, passing a successful result if the subscription is successfully saved.
     * note: You will need to be able to identify this subscription later if you choose to delete it. Use a unique identifier on the `Post` as the identifier for the subscription so you can manage the matching subscription as needed.
     * note: You will need an NSPredicate that checks if the `Comment`'s `post` is equal to the `post` parameter's `CKRecordID`

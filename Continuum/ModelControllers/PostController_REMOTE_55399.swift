@@ -52,10 +52,15 @@ class PostController{
                 rootViewController.showAlertMessage(titleStr: errorTitle, messageStr: errorMessage)
             }
         }
-        
     }
     
     // MARK: - Create
+    
+    
+    func addComment(_ text: String, to post: Post, completion: (Comment) -> ()){
+        let comment = Comment(text: text, post: post)
+        post.comments.append(comment)
+    }
     
     func createPostWith(captionText: String, photo: UIImage, completion: @escaping (Post?) -> ()){
         let post = Post(caption: captionText, photo: photo)
@@ -68,21 +73,6 @@ class PostController{
             completion(post)
         }
     }
-    
-    func addComment(_ text: String, to post: Post, completion: @escaping (Comment?) -> ()){
-        let comment = Comment(text: text, post: post)
-        post.comments.append(comment)
-        
-        publicDB.save(CKRecord(comment)) { (record, error) in
-            if let error = error {
-                print("Error saving Comment: \(error) \(error.localizedDescription)")
-                completion(nil);return
-            }
-            completion(comment)
-        }
-    
-    }
-    
     
     func addSubscritptionTO(commentsForPost post: Post, alertBody: String?, completion: ((Bool, Error) -> ())?){
         let postRecordID = post.recordID
