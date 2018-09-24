@@ -384,9 +384,11 @@ Remember that a `Comment` should not exist without a `Post`. When a `Comment` is
 
 ## Checking to see if the user is sigined into iCloud
 
-If the user isn't singed into their iCloud account, they are going to have a bad time using our app. BIG TIME BOARING, because most of the features wouldn't fully work. How could we let the user know that they are not signed into iCloud? If they are signed into iCloud, we want the app to continue as usual. Take a moment and think about this, if it the user is signed in 'do something' if the user isn't signed in do something else. What would our function signature look like? 
+If the user isn't singed into their iCloud account, they are going to have a bad time using our app. BIG TIME BOARING, because most of the features wouldn't fully work. If they arn't sigined in, we want to let the user know immediately. How could we let the user know that they are not signed into iCloud? If they are signed into iCloud, we want the app to continue as usual. Take a moment and think about this, if it the user is signed in 'do something' if the user isn't signed in 'do something else'. What would our function signature look like? 
 
-This is going to be an asyc call to check the accountStatus of a iPhone user. `CKContainer` has accountStatus fuction that can check the users status. There are 4 options, for `CKAccountStatus`. This is a great time to use a switch statment on the status inside the closure. Handel each case statment and completions. If you didn't see this coming already we need a `@escaping` completion closure to handel the events if the user is signed in or not. If the competion is false we can call another function within this fuction or present an alert and notify the user that they are not signed in. You'll want to Dispatch the alert on the main thread. 
+This is going to be an asyc call to check the accountStatus of a iPhone user. `CKContainer` has an accountStatus fuction that can check the users status. There are 4 options, for `CKAccountStatus`. This is a great time to use a switch statment based on the users status inside the closure. Handel each case statment and completions. If you didn't see this coming already we need a `@escaping` completion closure to handel the events if the user is signed in or not. If the competion is false we can call another function within this fuction to present an alert and notify the user that they are not signed in. You'll want to Dispatch the alert on the main thread. Make a function calld presentErrorAlert(errorTitle: String, errorMsessage: String). You'll call this fuction within your accountStatus fuction. Based on the users status you'll provide the proper errorMessage to inform the user. 
+
+If you attempt to present an alert in this class, you'll notice an error. That's because PostController isn't a subclass of `UIViewController` nor should it be. We don't have access to any `UIViewController` yet. We need to talk to the system that is the centrailized point of contol and coordination that runs our app. `UIApplication`! Specifically we need the `UIApplicationDelegate`. Every app must have an app delegate object to respond to app-related messages. For example, the app notifies its delegate when the app finishes launching and when its foreground or background execution status changes. Similarly, app-related messages coming from the system are often routed to the app delegate for handling. Access the rootViewController, once you have the rootViewController you can present an alert.
 
 Take a moment and try this on your own if you get stuck here is the code. 
 <details><summary> Account Status Code Snipit </summary><br>
@@ -430,7 +432,7 @@ Take a moment and try this on your own if you get stuck here is the code.
 
 You should be getting an error if you copied this code. Good, because you chose to copy and paste, reasearch for 10 minutes on how to add your own alert mesage to any `UIViewController`. 
 
-The `accountStatus` method is an async call thats why we want to Dispatch the alert on the main thread once we call the `presentErrorAlert` function insde the `checkAccountStatus` function.
+The `accountStatus` method is an async call thats why we want to Dispatch the alert on the main thread once we call the `presentErrorAlert` function insde the `checkAccountStatus` function. Call this in your app delegate and it should check if you're sigined in to iCloud, if not there sould be an alert controller. 
 
 #### Saving Records
 
