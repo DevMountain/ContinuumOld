@@ -70,7 +70,7 @@ Start by creating model objects. You will want to save `Post` objects that hold 
 Create a `Post` model object that will hold image data and comments.
 
 1. Add a new `Post` class to your project.
-2. Add a `photoData` property of type `Data?`, a `timestamp` `Date` property, and a `comments` property of type `[Comment]`.
+2. Add a `photoData` property of type `Data?`, a `timestamp` `Date` property, a `caption` of type `String`, and a `comments` property of type `[Comment]`.
 3. Add a computed property, `photo` with a getter which returns a `UIImage` initialized using the data in `photoData` and a setter which adjusts the value of the `photoData` property to match that of the `newValue` for UIImage.  _Notice, the initalizer for `UIImage(data: )` is failable and will return an optional UIImage and that `newValue.jpegData(compressionQuality: )` optional data.  You will need to handle these optionals by making `photoData` and `photo` optional properties._
 
 ```
@@ -85,7 +85,7 @@ var photo: UIImage?{
 }
 ```
 
-4. Add an initializer that accepts a photo, timestamp, and comments array. Provide a default values for the `timestamp` argument equal to the current date i.e. `Date()`.
+4. Add an initializer that accepts a photo, timestamp, captions, and comments array. Provide a default values for the `timestamp` argument equal to the current date i.e. `Date()`.
 
 #### Comment
 
@@ -253,6 +253,7 @@ Implement the Image Picker Controller in place of the prototype functionality yo
 2.  Implement  `UIImagePickerController` to access the phones photo library or camera.  Check to make sure each `UIImagePickerController.SourceType` is available, and for each that is add the appropriate action to the `UIAlertController` above.
 3. Implement the `UIImagePickerControllerDelegate` function to capture the selected image and assign it to the image view.
 Please read through the documentation for [UIImagePickerController](https://developer.apple.com/documentation/uikit/uiimagepickercontroller) and its [delegate](https://developer.apple.com/documentation/uikit/uiimagepickercontrollerdelegate)
+* note: Be sure to add a `NSCameraUsageDescription`
 
 ### Reduce Code Repetition
 
