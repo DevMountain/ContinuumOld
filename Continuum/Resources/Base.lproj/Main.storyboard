@@ -382,7 +382,7 @@
                             <constraint firstItem="pxh-mm-oBp" firstAttribute="leading" secondItem="Vg1-Km-l2Z" secondAttribute="leading" id="uQH-gL-3J1"/>
                             <constraint firstAttribute="trailing" secondItem="pxh-mm-oBp" secondAttribute="trailing" id="wnf-S9-H2M"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="QEJ-z1-H4k"/>
+                        <viewLayoutGuide key="safeArea" id="T8c-ke-ffp"/>
                     </view>
                     <connections>
                         <outlet property="photoImageView" destination="pxh-mm-oBp" id="t9w-nd-R6r"/>

@@ -16,6 +16,18 @@ class PostDetailTableViewController: UITableViewController {
         didSet{
             loadViewIfNeeded()
             updateViews()
+            loadComments()
+            
+        }
+    }
+    func loadComments() {
+        guard let post = post else { return }
+        PostController.shared.fetchComments(from: post) { (success) in
+            if success {
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
         }
     }
     
@@ -55,7 +67,6 @@ class PostDetailTableViewController: UITableViewController {
     
     func updateViews(){
         photoImageView.image = post?.photo
-        self.tableView.reloadData()
     }
     
     func presentCommentAlertController(){
@@ -68,11 +79,15 @@ class PostDetailTableViewController: UITableViewController {
         
         
         let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
-            guard let commentText = alertController.textFields?.first?.text, let post = self.post else {return}
+            guard var commentText = alertController.textFields?.first?.text, let post = self.post else {return}
             guard !commentText.isEmpty else {return}
-            PostController.shared.addComment(commentText, to: post, completion: { (_) in
+            PostController.shared.addComment(commentText, to: post, completion: { (comment) in
+                DispatchQueue.main.async {
+                    guard let comment = comment else { return }
+                    commentText = comment.text
+                    self.tableView.reloadData()
+                }
             })
-            self.tableView.reloadData()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         

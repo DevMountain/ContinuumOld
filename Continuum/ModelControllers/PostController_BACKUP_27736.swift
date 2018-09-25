@@ -81,6 +81,9 @@ class PostController{
         }
     }
     
+<<<<<<< HEAD
+    func addSubscritptionTo(commentsForPost post: Post, alertBody: String?, completion: ((Bool, Error) -> ())?){
+=======
     func addComment(_ text: String, to post: Post, completion: @escaping (Comment?) -> ()){
         let comment = Comment(text: text, post: post)
         post.comments.append(comment)
@@ -96,7 +99,8 @@ class PostController{
     }
     
     
-    func addSubscritptionTo(commentsForPost post: Post, alertBody: String?, completion: ((Bool, Error) -> ())?){
+    func addSubscritptionTO(commentsForPost post: Post, alertBody: String?, completion: ((Bool, Error) -> ())?){
+>>>>>>> b621a0044c1403c3eb43d7a0708108479503f2a8
         let postRecordID = post.recordID
         
         //Might need to change this predicate
@@ -115,6 +119,7 @@ class PostController{
         }
     }
     
+<<<<<<< HEAD
     func removeSubscriptionTo(commentsForPost post: Post, completion: ((Bool) -> ())?){
         let subscriptionID = post.recordID.recordName
         publicDB.delete(withSubscriptionID: subscriptionID) { (_, error) in
@@ -146,7 +151,7 @@ class PostController{
             
         }
     }
-    
+=======
     // MARK: - Fetch
     func fetchAllPostsFromCloudKit(completion: @escaping([Post]?) -> Void) {
         
@@ -196,4 +201,5 @@ class PostController{
     //
     
     
+>>>>>>> b621a0044c1403c3eb43d7a0708108479503f2a8
 }

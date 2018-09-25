@@ -16,7 +16,7 @@ class Comment{
     fileprivate let timestampKey = "timstamp"
     fileprivate let postReferenceKey = "postReference"
     
-    var recordID = CKRecord.ID(recordName: UUID().uuidString)
+    let recordID = CKRecord.ID(recordName: UUID().uuidString)
     var text: String
     var timestamp: Date
     weak var post: Post?
@@ -26,21 +26,20 @@ class Comment{
         self.timestamp = timestamp
         self.post = post
     }
-    
-     convenience required init?(record: CKRecord) {
-        guard let text = record["text"] as? String,
-            let timestamp = record.creationDate else { return nil}
-        self.init(text: text, timestamp: timestamp, post: nil)
-        self.recordID = record.recordID
-    }
 }
 
 extension CKRecord {
     convenience init(_ comment: Comment) {
+<<<<<<< Updated upstream
         guard let post = comment.post else {
             fatalError("Comment does not have a Post relationship")
         }
         self.init(recordType: comment.typeKey, recordID: comment.recordID)
+=======
+        guard let post = comment.post else { fatalError("Comment does not have a Post relationship") }
+        let recordID = CKRecord.ID(recordName: UUID().uuidString)
+        self.init(recordType: comment.typeKey, recordID: recordID)
+>>>>>>> Stashed changes
         self.setValue(comment.text, forKey: comment.typeKey)
         self.setValue(comment.timestamp, forKey: comment.timestampKey)
         self.setValue(CKRecord.Reference(recordID: post.recordID, action: .deleteSelf), forKey: comment.postReferenceKey)
