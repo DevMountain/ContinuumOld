@@ -5,6 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -381,6 +382,7 @@
                             <constraint firstItem="pxh-mm-oBp" firstAttribute="leading" secondItem="Vg1-Km-l2Z" secondAttribute="leading" id="uQH-gL-3J1"/>
                             <constraint firstAttribute="trailing" secondItem="pxh-mm-oBp" secondAttribute="trailing" id="wnf-S9-H2M"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="QEJ-z1-H4k"/>
                     </view>
                     <connections>
                         <outlet property="photoImageView" destination="pxh-mm-oBp" id="t9w-nd-R6r"/>

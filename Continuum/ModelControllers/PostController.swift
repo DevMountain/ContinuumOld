@@ -74,12 +74,12 @@ class PostController{
         }
     }
     
-    func addSubscritptionTO(commentsForPost post: Post, alertBody: String?, completion: ((Bool, Error) -> ())?){
+    func addSubscritptionTo(commentsForPost post: Post, alertBody: String?, completion: ((Bool, Error) -> ())?){
         let postRecordID = post.recordID
         
         //Might need to change this predicate
-        let predicate = NSPredicate(format: "post = %@", postRecordID)
-        let subscription = CKQuerySubscription(recordType: post.recordTypeKey, predicate: predicate, subscriptionID: UUID().uuidString, options: .firesOnRecordCreation)
+        let predicate = NSPredicate(format: "postReference = %@", postRecordID)
+        let subscription = CKQuerySubscription(recordType: "Comment", predicate: predicate, subscriptionID: post.recordID.recordName, options: .firesOnRecordCreation)
         let notificationInfo = CKSubscription.NotificationInfo()
         notificationInfo.alertBody = "A new comment was added a a post you follow!"
         notificationInfo.shouldSendContentAvailable = true
@@ -90,6 +90,38 @@ class PostController{
             if let error = error {
                 print("💩  There was an error in \(#function) ; \(error)  ; \(error.localizedDescription)  💩")
             }
+        }
+    }
+    
+    func removeSubscriptionTo(commentsForPost post: Post, completion: ((Bool) -> ())?){
+        let subscriptionID = post.recordID.recordName
+        publicDB.delete(withSubscriptionID: subscriptionID) { (_, error) in
+            if let error = error {
+                print("💩  There was an error in \(#function) ; \(error)  ; \(error.localizedDescription)  💩")
+                completion?(false)
+                return
+            }else {
+                print("Subscription deleted")
+                completion?(true)
+            }
+            
+        }
+    }
+    
+    func checkForSubscription(to post: Post, completion: ((Bool) -> ())?){
+        let subscriptionID = post.recordID.recordName
+        publicDB.fetch(withSubscriptionID: subscriptionID) { (subscription, error) in
+            if let error = error {
+                print("💩  There was an error in \(#function) ; \(error)  ; \(error.localizedDescription)  💩")
+                completion?(false)
+                return
+            }
+            if subscription != nil{
+                completion?(true)
+            }else {
+                completion?(false)
+            }
+            
         }
     }
 }
