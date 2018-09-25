@@ -16,7 +16,7 @@ class PostListTableViewController: UITableViewController, UISearchBarDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         postSearchBar.delegate = self
-        
+//        tableView.prefetchDataSource = self
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 350
         fetchAllPosts()
@@ -35,13 +35,19 @@ class PostListTableViewController: UITableViewController, UISearchBarDelegate {
     }
     
     func fetchAllPosts() {
-        PostController.shared.fetchAllPostsFromCloudKit { (posts) in
-            if posts != nil {
+        PostController.shared.fetchQueriedPosts { (firstPosts, continuedPosts) in
+            if firstPosts != nil {
+//                guard let firstPosts = firstPosts else { return }
+//                let indexPath = IndexPath(row: firstPosts.count - 1, section: 0)
+                DispatchQueue.main.async {
+
+                    self.tableView.reloadData()
+                }
+            }
+            if continuedPosts != nil {
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
-            } else {
-                self.showAlertMessage(titleStr: "Error Fetching Posts", messageStr: "There was an error, you better figure it out.")
             }
         }
     }
@@ -89,3 +95,17 @@ class PostListTableViewController: UITableViewController, UISearchBarDelegate {
 
 }
 
+extension PostListTableViewController: UITableViewDataSourcePrefetching {
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        
+        for indexPath in indexPaths {
+            let post = PostController.shared.posts[indexPath.row]
+            guard let url = post.imageAsset?.fileURL else {print("No tep url"); return }
+            print("Prefetching \(post.caption)")
+            URLSession.shared.dataTask(with: url).resume()
+        }
+    }
+    
+    
+    
+}

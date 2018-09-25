@@ -13,6 +13,7 @@ extension PostController {
     static let PostsChangedNotification = Notification.Name("PostsChangedNotification")
 }
 
+
 class PostController{
     
     static let shared = PostController()
@@ -136,6 +137,61 @@ class PostController{
             completion(posts)
         }
     }
+    
+    func fetchQueriedPosts(completion: @escaping (([Post]?, [Post]?) -> Void)) {
+        let predicate = NSPredicate(value: true)
+        let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
+        let query = CKQuery(recordType: "Post", predicate: predicate)
+        query.sortDescriptors = [sortDescriptor]
+        
+        let operation = CKQueryOperation(query: query)
+        operation.desiredKeys = ["caption", "photoData", "timestamp"]
+        operation.resultsLimit = 12
+        operation.qualityOfService = .userInteractive
+        
+        var newPosts = [Post]()
+        var continuedPosts = [Post]()
+        operation.recordFetchedBlock = { record in
+            guard let post = Post(record: record) else { print("NO BETS"); return }
+            newPosts.append(post)
+        }
+        operation.queryCompletionBlock = { [unowned self] (cursor, error) in
+            if let error = error {
+                print("Error with post queryCompletionBlock  \(error) \(error.localizedDescription)")
+            }
+            
+            // if there are more results go fetch them
+            let group = DispatchGroup()
+            if let queryCoursor = cursor {
+                let continuedQueryOperation = CKQueryOperation(cursor: queryCoursor)
+                continuedQueryOperation.recordFetchedBlock = { record in
+                    group.enter()
+                    guard let post = Post(record: record) else { print("NO BETS"); return }
+                    continuedPosts.append(post)
+                    group.leave()
+                }
+            
+                self.publicDB.add(continuedQueryOperation)
+            }
+            self.posts = newPosts
+            print(newPosts.count)
+            completion(newPosts, nil)
+            group.notify(queue: DispatchQueue.main, execute: {
+                
+                self.posts.append(contentsOf: continuedPosts)
+                completion(nil, continuedPosts)
+            })
+        }
+        publicDB.add(operation)
+    }
+    
+    /*             if let queryCoursor = cursor {
+     let continuedQueryOperation = CKQueryOperation(cursor: queryCoursor)
+     continuedQueryOperation.recordFetchedBlock = operation.recordFetchedBlock
+     continuedQueryOperation.queryCompletionBlock = operation.queryCompletionBlock
+     self.publicDB.add(continuedQueryOperation)
+     
+     }*/
     
     func fetchComments(from post: Post, completion: @escaping (Bool) -> Void) {
         let postRefence = CKRecord.Reference(recordID: post.recordID, action: .deleteSelf)
