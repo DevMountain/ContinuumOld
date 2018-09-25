@@ -85,6 +85,10 @@ class PostListTableViewController: UITableViewController, UISearchBarDelegate {
         isSearching = true
     }
     
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        isSearching = false
+    }
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
