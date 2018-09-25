@@ -16,7 +16,11 @@ extension PostController {
 class PostController{
     
     static let shared = PostController()
-    private init() {}
+    
+    private init() {
+        subscribeToNewPosts(completion: nil)
+    }
+    
     let publicDB = CKContainer.default().publicCloudDatabase
     
     var posts = [Post]() {
@@ -95,8 +99,74 @@ class PostController{
     
     }
     
+    // MARK: - Fetch
+    func fetchAllPostsFromCloudKit(completion: @escaping([Post]?) -> Void) {
+        
+        let predicate = NSPredicate(value: true)
+        let query = CKQuery(recordType: "Post", predicate: predicate)
+        
+        publicDB.perform(query, inZoneWith: nil) { (records, error) in
+            
+            if let error = error {
+                print("Error fetching posts from cloudKit \(#function) \(error) \(error.localizedDescription)")
+                completion(nil);return 
+            }
+            
+            guard let records = records else {completion(nil); return }
+            
+            let posts = records.compactMap{Post(record: $0)}
+          
+            self.posts = posts
+            completion(posts)
+        }
+    }
     
-    func addSubscritptionTo(commentsForPost post: Post, alertBody: String?, completion: ((Bool, Error) -> ())?){
+    func fetchComments(from post: Post, completion: @escaping (Bool) -> Void) {
+        let postRefence = post.recordID
+        let predicate = NSPredicate(format: "postReference == %@", postRefence)
+        let commentIDs = post.comments.compactMap({$0.recordID})
+        let predicate2 = NSPredicate(format: "NOT(recordID IN %@)", commentIDs)
+        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate, predicate2])
+    
+        let query = CKQuery(recordType: "Comment", predicate: compoundPredicate)
+        
+        publicDB.perform(query, inZoneWith: nil) { (records, error) in
+            
+            if let error = error {
+                print("Error fetching comments from cloudKit \(#function) \(error) \(error.localizedDescription)")
+                completion(false)
+                return
+            }
+            
+            guard let records = records else {completion(false); return }
+            
+            let comments = records.compactMap{Comment(record: $0)}
+            post.comments.append(contentsOf: comments)
+            completion(true)
+        }
+    }
+    
+    //MARK: - CloudKit Subscriptions
+    func subscribeToNewPosts(completion: ((Bool, Error?) -> Void)?){
+       let predicate = NSPredicate(value: true)
+        let subscription = CKQuerySubscription(recordType: "Post", predicate: predicate, subscriptionID: "AllPosts", options: .firesOnRecordCreation)
+        
+        let notifcationInfo = CKSubscription.NotificationInfo()
+        notifcationInfo.alertBody = "New post added to Continuum"
+        notifcationInfo.shouldBadge = true
+        subscription.notificationInfo = notifcationInfo
+        
+        publicDB.save(subscription) { (subscription, error) in
+            if let error = error {
+                print("💩  There was an error in \(#function) ; \(error)  ; \(error.localizedDescription)  💩")
+                completion?(false, error)
+            }else {
+                completion?(true, nil)
+            }
+        }
+    }
+    
+    func addSubscritptionTo(commentsForPost post: Post, completion: ((Bool, Error?) -> ())?){
         let postRecordID = post.recordID
         
         //Might need to change this predicate
@@ -106,11 +176,14 @@ class PostController{
         notificationInfo.alertBody = "A new comment was added a a post you follow!"
         notificationInfo.shouldSendContentAvailable = true
         notificationInfo.desiredKeys = nil
-       subscription.notificationInfo = notificationInfo
+        subscription.notificationInfo = notificationInfo
         
         publicDB.save(subscription) { (_, error) in
             if let error = error {
                 print("💩  There was an error in \(#function) ; \(error)  ; \(error.localizedDescription)  💩")
+                completion?(false, error)
+            }else{
+                completion?(true, nil)
             }
         }
     }
@@ -147,53 +220,34 @@ class PostController{
         }
     }
     
-    // MARK: - Fetch
-    func fetchAllPostsFromCloudKit(completion: @escaping([Post]?) -> Void) {
-        
-        let predicate = NSPredicate(value: true)
-        let query = CKQuery(recordType: "Post", predicate: predicate)
-        
-        publicDB.perform(query, inZoneWith: nil) { (records, error) in
-            
-            if let error = error {
-                print("Error fetching posts from cloudKit \(#function) \(error) \(error.localizedDescription)")
-                completion(nil);return 
+    func toggleSubscriptionTo(commentsForPost post: Post, completion: ((Bool, Error?) -> ())?){
+        checkForSubscription(to: post) { (isSubscribed) in
+            if isSubscribed{
+                self.removeSubscriptionTo(commentsForPost: post, completion: { (success) in
+                    if success{
+                        print("Successfully removed the subscription to the post with caption: \(post.caption)")
+                        completion?(true, nil)
+                    }else{
+                       print("Whoops somthing went wrong removing the subscription to the post with caption: \(post.caption)") ; completion?(true, nil)
+                        completion?(false, nil)
+                    }
+                })
+            }else {
+                self.addSubscritptionTo(commentsForPost: post, completion: { (success, error) in
+                    if let error = error {
+                        print("💩  There was an error in \(#function) ; \(error)  ; \(error.localizedDescription)  💩")
+                        completion?(false, error)
+                        return
+                    }
+                    if success{
+                        print("Successfully added the subscription to the post with caption: \(post.caption)")
+                        completion?(true, nil)
+                    }else{
+                        print("Whoops somthing went wrong adding the subscription to the post with caption: \(post.caption)") ; completion?(true, nil)
+                        completion?(false, nil)
+                    }
+                })
             }
-            
-            guard let records = records else {completion(nil); return }
-            
-            let posts = records.compactMap{Post(record: $0)}
-          
-            self.posts = posts
-            completion(posts)
         }
     }
-    
-    func fetchComments(from post: Post, completion: @escaping (Bool) -> Void) {
-        let postRefence = CKRecord.Reference(recordID: post.recordID, action: .deleteSelf)
-        let predicate = NSPredicate(format: "postReference == %@", postRefence)
-        let commentIDs = post.comments.compactMap({$0.recordID})
-        let predicate2 = NSPredicate(format: "NOT(recordID IN %@)", commentIDs)
-        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate, predicate2])
-    
-        let query = CKQuery(recordType: "Comment", predicate: compoundPredicate)
-        
-        publicDB.perform(query, inZoneWith: nil) { (records, error) in
-            
-            if let error = error {
-                print("Error fetching comments from cloudKit \(#function) \(error) \(error.localizedDescription)")
-                completion(false); return
-            }
-            
-            guard let records = records else {completion(false); return }
-            
-            let comments = records.compactMap{Comment(record: $0)}
-            post.comments.append(contentsOf: comments)
-            completion(true)
-        }
-    }
-    
-    //
-    
-    
 }

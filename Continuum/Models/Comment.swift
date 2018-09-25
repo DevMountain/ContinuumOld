@@ -41,7 +41,7 @@ extension CKRecord {
             fatalError("Comment does not have a Post relationship")
         }
         self.init(recordType: comment.typeKey, recordID: comment.recordID)
-        self.setValue(comment.text, forKey: comment.typeKey)
+        self.setValue(comment.text, forKey: comment.textKey)
         self.setValue(comment.timestamp, forKey: comment.timestampKey)
         self.setValue(CKRecord.Reference(recordID: post.recordID, action: .deleteSelf), forKey: comment.postReferenceKey)
     }

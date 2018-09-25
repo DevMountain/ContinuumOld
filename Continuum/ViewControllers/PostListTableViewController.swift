@@ -12,22 +12,26 @@ class PostListTableViewController: UITableViewController, UISearchBarDelegate {
     
     @IBOutlet weak var postSearchBar: UISearchBar!
     
-    var resultsArray: [SearchableRecord]?    
+    var resultsArray: [SearchableRecord]?
+    
+    var isSearching: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         postSearchBar.delegate = self
         
+        let nc = NotificationCenter.default
+        nc.addObserver(self, selector: #selector(postsChanged(_:)), name: PostController.PostsChangedNotification, object: nil)
+        
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 350
         fetchAllPosts()
-      
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         resultsArray = PostController.shared.posts
-        let nc = NotificationCenter.default
-        nc.addObserver(self, selector: #selector(postsChanged(_:)), name: PostController.PostsChangedNotification, object: nil)
+        tableView.reloadData()
     }
     
     @objc func postsChanged(_ notification: Notification) {
@@ -50,15 +54,16 @@ class PostListTableViewController: UITableViewController, UISearchBarDelegate {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return PostController.shared.posts.count
+        return isSearching ? resultsArray?.count ?? 0: PostController.shared.posts.count
+        
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as? PostTableViewCell
 //        let post = resultsArray?[indexPath.row] as? Post
-        let post = PostController.shared.posts[indexPath.row]
-        
-        cell?.post = post
+        let dataSource = isSearching ? resultsArray : PostController.shared.posts
+        let post = dataSource?[indexPath.row]
+        cell?.post = post as? Post
         return cell ?? UITableViewCell()
     }
 
@@ -75,6 +80,11 @@ class PostListTableViewController: UITableViewController, UISearchBarDelegate {
         resultsArray = PostController.shared.posts
         tableView.reloadData()
     }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        isSearching = true
+    }
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation

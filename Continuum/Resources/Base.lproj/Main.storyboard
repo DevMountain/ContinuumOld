@@ -328,6 +328,7 @@
                         </connections>
                     </tableView>
                     <connections>
+                        <outlet property="followButton" destination="HpO-BA-1rR" id="Vt9-ed-sDb"/>
                         <outlet property="photoImageView" destination="cqK-bu-zT2" id="P2y-wJ-F0V"/>
                     </connections>
                 </tableViewController>
