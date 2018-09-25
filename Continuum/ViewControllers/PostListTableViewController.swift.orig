@@ -19,10 +19,14 @@ class PostListTableViewController: UITableViewController, UISearchBarDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         postSearchBar.delegate = self
+<<<<<<< HEAD
+//        tableView.prefetchDataSource = self
+=======
         
         let nc = NotificationCenter.default
         nc.addObserver(self, selector: #selector(postsChanged(_:)), name: PostController.PostsChangedNotification, object: nil)
         
+>>>>>>> aee97c714262b1fa8095bd6230d2172142b37615
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 350
         fetchAllPosts()

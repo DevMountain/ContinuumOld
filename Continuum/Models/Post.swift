@@ -16,7 +16,7 @@ class Post{
     fileprivate let timestampKey = "timestamp"
     fileprivate let photoDataKey = "photoData"
     
-    let recordID = CKRecord.ID(recordName: UUID().uuidString)
+    var recordID = CKRecord.ID(recordName: UUID().uuidString)
     var caption: String
     var photoData: Data?
     var timestamp: Date
@@ -78,6 +78,7 @@ class Post{
         self.timestamp = timestamp
         self.photoData = photoData
         self.comments = []
+        self.recordID = record.recordID
     }
 }
 

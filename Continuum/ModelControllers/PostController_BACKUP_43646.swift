@@ -14,6 +14,7 @@ extension PostController {
     static let PostsChangedNotification = Notification.Name("PostsChangedNotification")
 }
 
+
 class PostController{
     
     static let shared = PostController()
@@ -45,7 +46,7 @@ class PostController{
                 let errrorText = "Sign into iCloud in Settings"
                 switch status {
                 case .available:
-                   completion(true)
+                    completion(true)
                 case .noAccount:
                     let noAccount = "No account found"
                     self?.presentErrorAlert(errorTitle: errrorText, errorMessage: noAccount)
@@ -97,9 +98,10 @@ class PostController{
             }
             completion(comment)
         }
-    
+        
     }
     
+<<<<<<< HEAD
     
     func addSubscritptionTO(commentsForPost post: Post, alertBody: String?, completion: ((Bool, Error) -> ())?){
         let postRecordID = post.recordID
@@ -120,6 +122,8 @@ class PostController{
         }
     }
     
+=======
+>>>>>>> aee97c714262b1fa8095bd6230d2172142b37615
     // MARK: - Fetch
     func fetchAllPostsFromCloudKit(completion: @escaping([Post]?) -> Void) {
         

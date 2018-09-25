@@ -11,6 +11,7 @@ import UIKit
 class PostDetailTableViewController: UITableViewController {
     
     @IBOutlet weak var photoImageView: UIImageView!
+    @IBOutlet weak var followButton: UIButton!
     
     var post: Post?{
         didSet{
@@ -20,6 +21,7 @@ class PostDetailTableViewController: UITableViewController {
             
         }
     }
+    
     func loadComments() {
         guard let post = post else { return }
         PostController.shared.fetchComments(from: post) { (success) in
@@ -66,7 +68,15 @@ class PostDetailTableViewController: UITableViewController {
     }
     
     func updateViews(){
-        photoImageView.image = post?.photo
+        guard let post = post else {return}
+        photoImageView.image = post.photo
+        
+        PostController.shared.checkForSubscription(to: post) { (isSubscribed) in
+            DispatchQueue.main.async {
+                let buttonTitle = isSubscribed ? "Unfollow" : "Follow"
+                self.followButton.setTitle(buttonTitle, for: .normal)
+            }
+        }
     }
     
     func presentCommentAlertController(){
@@ -110,6 +120,17 @@ class PostDetailTableViewController: UITableViewController {
     }
     
     @IBAction func followButtonTapped(_ sender: Any) {
-        
+        guard let post = post else {return}
+        PostController.shared.toggleSubscriptionTo(commentsForPost: post) { (success, error) in
+            if let error = error {
+                print("💩  There was an error in \(#function) ; \(error)  ; \(error.localizedDescription)  💩")
+                return
+            }
+            if success{
+                DispatchQueue.main.async {
+                    self.updateViews()
+                }
+            }
+        }
     }
 }

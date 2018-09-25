@@ -100,26 +100,6 @@ class PostController{
     
     }
     
-    
-    func addSubscritptionTO(commentsForPost post: Post, alertBody: String?, completion: ((Bool, Error) -> ())?){
-        let postRecordID = post.recordID
-        
-        //Might need to change this predicate
-        let predicate = NSPredicate(format: "post = %@", postRecordID)
-        let subscription = CKQuerySubscription(recordType: post.recordTypeKey, predicate: predicate, subscriptionID: UUID().uuidString, options: .firesOnRecordCreation)
-        let notificationInfo = CKSubscription.NotificationInfo()
-        notificationInfo.alertBody = "A new comment was added a a post you follow!"
-        notificationInfo.shouldSendContentAvailable = true
-        notificationInfo.desiredKeys = nil
-        subscription.notificationInfo = notificationInfo
-        
-        publicDB.save(subscription) { (_, error) in
-            if let error = error {
-                print("💩  There was an error in \(#function) ; \(error)  ; \(error.localizedDescription)  💩")
-            }
-        }
-    }
-    
     // MARK: - Fetch
     func fetchAllPostsFromCloudKit(completion: @escaping([Post]?) -> Void) {
         
@@ -136,57 +116,11 @@ class PostController{
             guard let records = records else {completion(nil); return }
             
             let posts = records.compactMap{Post(record: $0)}
-            
+          
             self.posts = posts
             completion(posts)
         }
     }
-    
-    func fetchQueriedPosts(completion: @escaping (([Post]?, [Post]?) -> Void)) {
-        let predicate = NSPredicate(value: true)
-        let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
-        let query = CKQuery(recordType: "Post", predicate: predicate)
-        query.sortDescriptors = [sortDescriptor]
-        
-        let operation = CKQueryOperation(query: query)
-        operation.desiredKeys = ["caption", "photoData", "timestamp"]
-        operation.resultsLimit = 5
-        operation.qualityOfService = .userInteractive
-        
-        var newPosts = [Post]()
-//        var continuedPosts = [Post]()
-        operation.recordFetchedBlock = { record in
-            guard let post = Post(record: record) else { print("NO BETS"); return }
-            newPosts.append(post)
-        }
-        operation.queryCompletionBlock = { [unowned self] (cursor, error) in
-            if let error = error {
-                print("Error with post queryCompletionBlock  \(error) \(error.localizedDescription)")
-            }
-            
-            // if there are more results go fetch them
-            if let queryCoursor = cursor {
-                // TODO: - make it paginated
-                let continuedQueryOperation = CKQueryOperation(cursor: queryCoursor)
-                continuedQueryOperation.recordFetchedBlock = operation.recordFetchedBlock
-                continuedQueryOperation.queryCompletionBlock = operation.queryCompletionBlock
-                self.publicDB.add(continuedQueryOperation)
-                
-            }
-            self.posts = newPosts
-            completion(newPosts, nil)
-            
-        }
-        publicDB.add(operation)
-    }
-    
-    /*             if let queryCoursor = cursor {
-     let continuedQueryOperation = CKQueryOperation(cursor: queryCoursor)
-     continuedQueryOperation.recordFetchedBlock = operation.recordFetchedBlock
-     continuedQueryOperation.queryCompletionBlock = operation.queryCompletionBlock
-     self.publicDB.add(continuedQueryOperation)
-     
-     }*/
     
     func fetchComments(from post: Post, completion: @escaping (Bool) -> Void) {
         let postRefence = post.recordID
@@ -194,7 +128,7 @@ class PostController{
         let commentIDs = post.comments.compactMap({$0.recordID})
         let predicate2 = NSPredicate(format: "NOT(recordID IN %@)", commentIDs)
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate, predicate2])
-        
+    
         let query = CKQuery(recordType: "Comment", predicate: compoundPredicate)
         
         publicDB.perform(query, inZoneWith: nil) { (records, error) in

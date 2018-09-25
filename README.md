@@ -216,11 +216,14 @@ Use a UISearchbar to allow a user to search through different posts for the give
 
 1. Add a `UISearchBar` to the headerView of the  `PostListTableViewController` scene in the main storyboard.  Check the `Shows Cancel Button` in the attributes inspector.  Create an IBOutlet from the search bar to the `PostListTableViewController` class.
 2. Add a `resultsArray` property in the `PostListTableViewController` class that contains an array of `SearchableRecords`
-3. Refactor the `UITableViewDataSource` methods to populate the tableView based on the `resultsArray`
-    * note: For now you will only display `Post` objects as a result of a search. Use the `PostTableViewCell` to do so.  In `cellForRowAt` function you will need to cast the data pulled out of the results array as a `Post`
+3. Add an `isSearching` property at the top of the class which stores a `Bool` value set to false by default
+3. Refactor the `UITableViewDataSource` methods to populate the tableView with the `resultsArray` if `isSearching` is `true` and with the `PostController.shared.posts` if `isSearching` is `false`.
+    * note: You will only display `Post` objects as a result of a search. Use the `PostTableViewCell` to do so.  In `cellForRowAt` function you will need to cast the data pulled out of the results array as a `Post`
 4. In `ViewWillAppear` set the results array equal to the `PostController.shared.posts`.
 5. Adopt the UISearchBarDelegate protocol, and implement the `searchBar(_:textDidChange:)` function.  Within the function filter the posts using the `Post` object's  `matches(searchTerm: String)` function and setting the `resultsArray` equal to the results of the filter.  Call `tableView.reloadData()` at the end of this function.
 6. Implement the `searchBarCancelButtonClicked(_ searchBar:)`  function, using it to set the results array equall to `PostController.shared.posts` then reload the table view.  You should also set the searchBar's text equal to an empty String and resign its first responder.  This will return the feed back to its normal state of displaying all posts when the user cancels a search.
+7. Implement the `searchBarTextDidBeginEditing` and set `isSearching` to `true`.
+8. Implement the `searchBarTextDidEndEditing` and set `isSearching` to `false`.
 6. In `ViewDidLoad` set the Search Bar's delegate property equal to `self` 
 
 ##### Segue to Post Detail View
@@ -559,37 +562,41 @@ When a user follows a `Post`, he or she will receive a push notification and aut
 
 Create and save a subscription for all new `Post` records.
 
-1. Add a function `subscribeToNewPosts` that takes an optional completion closure with `success` `Bool` and `error` `NSError?` parameters.
+1. Add a function `subscribeToNewPosts` that takes an optional completion closure with  `Bool` and `Error?` parameters.
     * note: Use an identifier that describes that this subscription is for all posts.
-2. Implement the function by using the `CloudKitManager` to subscribe to newly created `Post` records. Run the completion closure, passing a successful result if the subscription is successfully saved.
+2. Initialize a new CKQuerySubscription for the `recordType` of 'Post'.  Pass in a predicate object with it value set to `true`.
+3. Save the subscription to the public database.  Handle any error which may be passed out of the completion handler and complete with true of false based on whether or not an error occured while saving.
 3. Call the `subscribeToNewPosts` in the initializer for the `PostController` so that each user is subscribed to new `Post` records saved to CloudKit.
 
 #### Subscribe to New Comments
 
 Create and save a subscription for all new `Comment` records that point to a given `Post`
 
-1. Add a function `addSubscriptionTo(commentsForPost post: ...)` that takes a `Post` parameter, an optional 'alertBody' `String?` parameter, and an optional completion closure wich takes in a `Bool` and `Error` parameters.
-2. Implement the function by using the `CloudKitManager` to subscribe to newly created `Comment` records that point to the `post` parameter. Run the completion closure, passing a successful result if the subscription is successfully saved.
-    * note: You will need to be able to identify this subscription later if you choose to delete it. Use a unique identifier on the `Post` as the identifier for the subscription so you can manage the matching subscription as needed.
-    * note: You will need an NSPredicate that checks if the `Comment`'s `post` is equal to the `post` parameter's `CKRecordID`
+1. Add a function `addSubscriptionTo(commentsForPost post: ...)` that takes a `Post` parameter and an optional completion closure wich takes in a `Bool` and `Error` parameters.
+2. Initialize a new NSPredicate formated to search for all post references equal to the `recordID` property on the `Post` parameter from the function.
+3. Initalize a new `CKQuerySubscription` with a record type of `Comment`, the predicate from above, a `subscriptionID` equal to the posts record name which can be accessed using `post.recordID.recordName`, with the `options` set to `CKQuerySubscription.Options.firesOnRecordCreation` 
+4. Initalize a new `CKSubscription.NotificationInfo` with an empty inializer.  You can then set the properties of `alertBody`, `shouldSendContentAvailable`, and `desiredKeys`.  Once you have adjusted these settings, the `notificationInfo` property on the instance of `CKQuerySubscription` you initialized above.
+5. Save the subscription you initalized and modified in the public database.  Check for an error in the ensuing completion handler.
+* Please see the [CloudKit Programming Guide](https://developer.apple.com/library/archive/documentation/DataManagement/Conceptual/CloudKitQuickStart/SubscribingtoRecordChanges/SubscribingtoRecordChanges.html#//apple_ref/doc/uid/TP40014987-CH8-SW1) and [CKQuerySubscription Documentation](https://developer.apple.com/documentation/cloudkit/ckquerysubscription) for more detail.
 
 #### Manage Post Comment Subscriptions
 
 The Post Detail scene allows users to follow and unfollow new `Comment`s on a given `Post`. Add a function for removing a subscription, and another function that will toggle a subscription for a given `Post`.
 
 1. Add a function `removeSubscriptionTo(commentsForPost post: ...)` that takes a `Post` parameter and an optional completion closure with `success` and `error` parameters.
-2. Implement the function by using the `CloudKitManager` to unsubscribe to the subscription for that `Post`.
+2. Implement the function by calling `delete(withSubscriptionID: ...)` on the public data base. Handle the error which may be returned by the completion handler.  If there is no error complete with `true`.
     * note: Use the unique identifier you used to save the subscription above. Most likely this will be your unique `recordName` for the `Post`.
-3. Add a function `checkSubscriptionToPostComments` that takes a `Post` parameter and an optional completion closure with a `subscribed` `Bool` parameter.
-4. Implement the function by using the `CloudKitManager` to fetch a subscription with the `post.recordName` as an identifier. If the subscription is not nil, the user is subscribed. If the subscription is nil, the user is not subscribed. Run the completion closure with the appropriate parameters.
-5. Add a function `toggleSubscriptionTo(commentsForPost post: ...)` that takes a `Post` parameter and an optional completion closure with `success`, `isSubscribed`, and `error` parameters.
-6. Implement the function by using the `CloudKitManager` to fetch subscriptions, check for a subscription that matches the `Post`, removes it if it exists, or adds it if it does not exist. Run the optional completion closure with the appropriate parameters.
+3. Add a function `checkSubscription(to post: ...)` that takes a `Post` parameter and an optional completion closure with a  `Bool` parameter.
+4. Implement the function by fetching the subscription by calling `fetch(withSubscriptionID: ...)` passing in the unique `recordName` for the `Post`.  Handle any errors which may be generated in the completion handler.  If the `CKSubscription` is not equal to nil complete with `true`, else complete with `false`.
+    
+5. Add a function `toggleSubscriptionTo(commentsForPost post: ...)` that takes a `Post` parameter and an optional completion closure with `Bool`, and `Error` parameters.
+6. Implement the function by calling the `checkForSubscription(to post:...)` function above.  If a subscription does not exist, subscribe the user to comments for a given post by calling the `addSubscriptionTo(commentsForPost post: ...)` ; if one does, cancel the subscription by calling  `removeSubscriptionTo(commentsForPost post: ...)`.
 
 ### Update User Interface
 
-Update the Post Detail scene's `Follow Post` button to display the correct text based on the current user's subscription. Update the outlet to toggle subscriptions for new comments on a `Post`.
+Update the Post Detail scene's `Follow Post` button to display the correct text based on the current user's subscription. Update the IBAction to toggle subscriptions for new comments on a `Post`.
 
-1. Update the `updateViews` function to call the `checkSubscriptionTo(commentsForPost: ...)` on the `PostController` and set appropriate text for the button based on the response.
+1. Update the `updateViews` function to call the `checkSubscriptionTo(commentsForPost: ...)` on the `PostController` and set appropriate text for the button based on the response.  You will need to add an IBOutlet for the button if you have not already.
 2. Implement the `Follow Post` button's IBAction to call the `toggleSubscriptionTo(commentsForPost: ...)` function on the `PostController` and update the `Follow Post` button's text based on the new subscription state.
 
 ### Add Permissions
@@ -606,6 +613,6 @@ Update the Info.plist to declare backgrounding support for responding to remote 
 At this point the application will save subscriptions to the CloudKit database, and when new `Post` or `Comment` records are created that match those subscriptions, the CloudKit database will deliver a push notification to the application with the record data.
 
 Handle the push notification by serializing the data into a `Post` or `Comment` object. If the user is actively using the application, the user interface will be updated in response to notifications posted by the `PostController`.
-s
+
 1. Add the `didReceiveRemoteNotification` delegate function to the `AppDelegate`.
 2. Implement the function by telling the `PostController` to call the `fetchPosts` function, which will fetch all new `Post`s and all new `Comment`s. Run the completion handler by passing in the `UIBackgroundFetchResult.NewData` response.
