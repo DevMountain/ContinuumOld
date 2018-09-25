@@ -12,32 +12,52 @@ class PostListTableViewController: UITableViewController, UISearchBarDelegate {
     
     @IBOutlet weak var postSearchBar: UISearchBar!
     
-    var resultsArray: [SearchableRecord]?
-    
+    var resultsArray: [SearchableRecord]?    
     override func viewDidLoad() {
         super.viewDidLoad()
         postSearchBar.delegate = self
         
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 350
+        fetchAllPosts()
+      
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         resultsArray = PostController.shared.posts
-        self.tableView.reloadData()
+        let nc = NotificationCenter.default
+        nc.addObserver(self, selector: #selector(postsChanged(_:)), name: PostController.PostsChangedNotification, object: nil)
+    }
+    
+    @objc func postsChanged(_ notification: Notification) {
+        tableView.reloadData()
+    }
+    
+    func fetchAllPosts() {
+        PostController.shared.fetchAllPostsFromCloudKit { (posts) in
+            if posts != nil {
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            } else {
+                self.showAlertMessage(titleStr: "Error Fetching Posts", messageStr: "There was an error, you better figure it out.")
+            }
+        }
     }
 
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return resultsArray?.count ?? 0
+        return PostController.shared.posts.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as? PostTableViewCell
-        let post = resultsArray?[indexPath.row] as? Post
+//        let post = resultsArray?[indexPath.row] as? Post
+        let post = PostController.shared.posts[indexPath.row]
+        
         cell?.post = post
         return cell ?? UITableViewCell()
     }

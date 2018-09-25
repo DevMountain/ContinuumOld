@@ -20,7 +20,7 @@ class Post{
     var caption: String
     var photoData: Data?
     var timestamp: Date
-    var comments: [Comment]
+    var comments: [Comment] = []
     var tempURL: URL?
     
     init(caption: String, photo: UIImage, comments: [Comment] = [], timestamp: Date = Date()){
@@ -64,6 +64,20 @@ class Post{
                 print("Error deleting temp file, or may cause memory leak: \(error)")
             }
         }
+    }
+    
+    // MARK: - Fetching
+     init?(record: CKRecord) {
+        guard let caption = record[captionKey] as? String,
+            let timestamp = record.creationDate,
+            let imageAsset = record[photoDataKey] as? CKAsset else { return nil }
+//        self.imageAsset = photoAsset
+        guard let photoData = try? Data(contentsOf: imageAsset.fileURL) else { return nil }
+    
+        self.caption = caption
+        self.timestamp = timestamp
+        self.photoData = photoData
+        self.comments = []
     }
 }
 

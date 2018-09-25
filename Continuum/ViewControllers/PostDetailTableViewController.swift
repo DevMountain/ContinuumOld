@@ -16,6 +16,18 @@ class PostDetailTableViewController: UITableViewController {
         didSet{
             loadViewIfNeeded()
             updateViews()
+            loadComments()
+            
+        }
+    }
+    func loadComments() {
+        guard let post = post else { return }
+        PostController.shared.fetchComments(from: post) { (success) in
+            if success {
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
         }
     }
     
@@ -55,7 +67,6 @@ class PostDetailTableViewController: UITableViewController {
     
     func updateViews(){
         photoImageView.image = post?.photo
-        self.tableView.reloadData()
     }
     
     func presentCommentAlertController(){

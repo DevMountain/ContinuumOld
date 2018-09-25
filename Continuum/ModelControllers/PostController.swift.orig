@@ -9,25 +9,13 @@
 import UIKit
 import CloudKit
 
-extension PostController {
-    static let PostsChangedNotification = Notification.Name("PostsChangedNotification")
-}
-
 class PostController{
     
     static let shared = PostController()
     private init() {}
     let publicDB = CKContainer.default().publicCloudDatabase
     
-    var posts = [Post]() {
-        didSet {
-            DispatchQueue.main.async {
-                let nc = NotificationCenter.default
-                nc.post(name: PostController.PostsChangedNotification, object: self)
-            }
-        }
-    }
-    
+    var posts = [Post]()
     
     // MARK: - CloudKit Availablity
     
@@ -114,54 +102,4 @@ class PostController{
             }
         }
     }
-    
-    // MARK: - Fetch
-    func fetchAllPostsFromCloudKit(completion: @escaping([Post]?) -> Void) {
-        
-        let predicate = NSPredicate(value: true)
-        let query = CKQuery(recordType: "Post", predicate: predicate)
-        
-        publicDB.perform(query, inZoneWith: nil) { (records, error) in
-            
-            if let error = error {
-                print("Error fetching posts from cloudKit \(#function) \(error) \(error.localizedDescription)")
-                completion(nil);return 
-            }
-            
-            guard let records = records else {completion(nil); return }
-            
-            let posts = records.compactMap{Post(record: $0)}
-          
-            self.posts = posts
-            completion(posts)
-        }
-    }
-    
-    func fetchComments(from post: Post, completion: @escaping (Bool) -> Void) {
-        let postRefence = CKRecord.Reference(recordID: post.recordID, action: .deleteSelf)
-        let predicate = NSPredicate(format: "postReference == %@", postRefence)
-        let commentIDs = post.comments.compactMap({$0.recordID})
-        let predicate2 = NSPredicate(format: "NOT(recordID IN %@)", commentIDs)
-        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate, predicate2])
-    
-        let query = CKQuery(recordType: "Comment", predicate: compoundPredicate)
-        
-        publicDB.perform(query, inZoneWith: nil) { (records, error) in
-            
-            if let error = error {
-                print("Error fetching comments from cloudKit \(#function) \(error) \(error.localizedDescription)")
-                completion(false); return
-            }
-            
-            guard let records = records else {completion(false); return }
-            
-            let comments = records.compactMap{Comment(record: $0)}
-            post.comments.append(contentsOf: comments)
-            completion(true)
-        }
-    }
-    
-    //
-    
-    
 }
