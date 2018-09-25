@@ -221,6 +221,7 @@ class PostController{
         let notifcationInfo = CKSubscription.NotificationInfo()
         notifcationInfo.alertBody = "New post added to Continuum"
         notifcationInfo.shouldBadge = true
+        notifcationInfo.shouldSendContentAvailable = true
         subscription.notificationInfo = notifcationInfo
         
         publicDB.save(subscription) { (subscription, error) in
