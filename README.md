@@ -31,6 +31,23 @@ Students who complete this project independently are able to:
 * use subscriptions to generate push notifications
 * use push notifications to run a push based sync engine
 
+## Why CloudKit? 
+
+If you where in an interview and a developer asked you why you chose to use CloudKit, what woud your answer be? "Because my mentors taught me", would be a lazy answer. Be confident with your descison to show you know what you're talking about. My reasons below would be as follows. 
+
+* CloudKit is organic. You don't have to download anything. It forces you to become a better Apple programmer by following their convetions and design principles. 
+* Its free! 
+* Free authentication.
+* Great privacy protection. 
+* Really good resources, from Apple Programming Guides, WWDC videos on cloudKit best practices, easy to handel new updates. 
+
+
+All of these apps use cloudKit. Millions of users make use of these app every day. If you work hard this week to learn these covered concepts, you'll see it pay off in your capstones. If you work hard in your capstones, you'll literally see you're hard work get paid off.
+
+
+![cloudkitapps](https://user-images.githubusercontent.com/23179585/46048479-cbdbf080-c0e6-11e8-819a-e3004c648a9f.png)
+
+
 ## Part One - Project Planning, Model Objects, and Controllers
 
 * follow a project planning framework to build a development plan
@@ -57,7 +74,6 @@ The second tab is a separate navigation controller that will hold a view control
 
 Your Storyboard should be simple skeleton resembeling the set up below:
 
-![Alt text](/Photos/storyboard1.png?raw=true "Storyboard 1")
 
 ### Implement Model
 
