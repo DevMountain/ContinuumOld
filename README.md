@@ -607,6 +607,7 @@ Update the Info.plist to declare backgrounding support for responding to remote 
 
 2. Request the user's permission to display notifications in the `AppDelegate` `didFinishLaunchingWithOptions` function.
     * note: Use the `requestAuthorization` function that is a part of `UNUserNotificationCenter`.
+3. Reigster the App to recieve push notifications `application.registerForRemoteNotifications()`
 
 ### Handle Received Push Notifications
 
@@ -615,4 +616,4 @@ At this point the application will save subscriptions to the CloudKit database, 
 Handle the push notification by serializing the data into a `Post` or `Comment` object. If the user is actively using the application, the user interface will be updated in response to notifications posted by the `PostController`.
 
 1. Add the `didReceiveRemoteNotification` delegate function to the `AppDelegate`.
-2. Implement the function by telling the `PostController` to call the `fetchPosts` function, which will fetch all new `Post`s and all new `Comment`s. Run the completion handler by passing in the `UIBackgroundFetchResult.NewData` response.
+2. Implement the function by telling the `PostController` to call the `fetchPosts` function.

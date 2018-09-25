@@ -27,10 +27,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             success ? print("Successfully authorized to send push notfiication") : print("DENIED, Can't send this person notificiation")
         }
         
+        application.registerForRemoteNotifications()
+        
         return true
     }
 
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        print("Recieved a notificaton")
         PostController.shared.fetchAllPostsFromCloudKit { (_) in
         }
     }
