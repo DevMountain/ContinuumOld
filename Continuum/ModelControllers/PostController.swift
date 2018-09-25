@@ -41,7 +41,7 @@ class PostController{
                 let errrorText = "Sign into iCloud in Settings"
                 switch status {
                 case .available:
-                   completion(true)
+                    completion(true)
                 case .noAccount:
                     let noAccount = "No account found"
                     self?.presentErrorAlert(errorTitle: errrorText, errorMessage: noAccount)
@@ -93,7 +93,7 @@ class PostController{
             }
             completion(comment)
         }
-    
+        
     }
     
     
@@ -107,7 +107,7 @@ class PostController{
         notificationInfo.alertBody = "A new comment was added a a post you follow!"
         notificationInfo.shouldSendContentAvailable = true
         notificationInfo.desiredKeys = nil
-       subscription.notificationInfo = notificationInfo
+        subscription.notificationInfo = notificationInfo
         
         publicDB.save(subscription) { (_, error) in
             if let error = error {
@@ -132,7 +132,7 @@ class PostController{
             guard let records = records else {completion(nil); return }
             
             let posts = records.compactMap{Post(record: $0)}
-          
+            
             self.posts = posts
             completion(posts)
         }
@@ -150,7 +150,7 @@ class PostController{
         operation.qualityOfService = .userInteractive
         
         var newPosts = [Post]()
-        var continuedPosts = [Post]()
+//        var continuedPosts = [Post]()
         operation.recordFetchedBlock = { record in
             guard let post = Post(record: record) else { print("NO BETS"); return }
             newPosts.append(post)
@@ -161,26 +161,16 @@ class PostController{
             }
             
             // if there are more results go fetch them
-            let group = DispatchGroup()
             if let queryCoursor = cursor {
+                // TODO: - make it paginated
                 let continuedQueryOperation = CKQueryOperation(cursor: queryCoursor)
-                continuedQueryOperation.recordFetchedBlock = { record in
-                    group.enter()
-                    guard let post = Post(record: record) else { print("NO BETS"); return }
-                    continuedPosts.append(post)
-                    group.leave()
-                }
-            
+                continuedQueryOperation.recordFetchedBlock = operation.recordFetchedBlock
+                continuedQueryOperation.queryCompletionBlock = operation.queryCompletionBlock
                 self.publicDB.add(continuedQueryOperation)
+                
             }
             self.posts = newPosts
-            print(newPosts.count)
-            completion(newPosts, nil)
-            group.notify(queue: DispatchQueue.main, execute: {
-                
-                self.posts.append(contentsOf: continuedPosts)
-                completion(nil, continuedPosts)
-            })
+            
         }
         publicDB.add(operation)
     }
@@ -199,7 +189,7 @@ class PostController{
         let commentIDs = post.comments.compactMap({$0.recordID})
         let predicate2 = NSPredicate(format: "NOT(recordID IN %@)", commentIDs)
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate, predicate2])
-    
+        
         let query = CKQuery(recordType: "Comment", predicate: compoundPredicate)
         
         publicDB.perform(query, inZoneWith: nil) { (records, error) in
