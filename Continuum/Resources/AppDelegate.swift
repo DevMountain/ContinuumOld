@@ -26,6 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             }
             success ? print("Successfully authorized to send push notfiication") : print("DENIED, Can't send this person notificiation")
         }
+        
         return true
     }
 

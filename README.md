@@ -216,11 +216,14 @@ Use a UISearchbar to allow a user to search through different posts for the give
 
 1. Add a `UISearchBar` to the headerView of the  `PostListTableViewController` scene in the main storyboard.  Check the `Shows Cancel Button` in the attributes inspector.  Create an IBOutlet from the search bar to the `PostListTableViewController` class.
 2. Add a `resultsArray` property in the `PostListTableViewController` class that contains an array of `SearchableRecords`
-3. Refactor the `UITableViewDataSource` methods to populate the tableView based on the `resultsArray`
-    * note: For now you will only display `Post` objects as a result of a search. Use the `PostTableViewCell` to do so.  In `cellForRowAt` function you will need to cast the data pulled out of the results array as a `Post`
+3. Add an `isSearching` property at the top of the class which stores a `Bool` value set to false by default
+3. Refactor the `UITableViewDataSource` methods to populate the tableView with the `resultsArray` if `isSearching` is `true` and with the `PostController.shared.posts` if `isSearching` is `false`.
+    * note: You will only display `Post` objects as a result of a search. Use the `PostTableViewCell` to do so.  In `cellForRowAt` function you will need to cast the data pulled out of the results array as a `Post`
 4. In `ViewWillAppear` set the results array equal to the `PostController.shared.posts`.
 5. Adopt the UISearchBarDelegate protocol, and implement the `searchBar(_:textDidChange:)` function.  Within the function filter the posts using the `Post` object's  `matches(searchTerm: String)` function and setting the `resultsArray` equal to the results of the filter.  Call `tableView.reloadData()` at the end of this function.
 6. Implement the `searchBarCancelButtonClicked(_ searchBar:)`  function, using it to set the results array equall to `PostController.shared.posts` then reload the table view.  You should also set the searchBar's text equal to an empty String and resign its first responder.  This will return the feed back to its normal state of displaying all posts when the user cancels a search.
+7. Implement the `searchBarTextDidBeginEditing` and set `isSearching` to `true`.
+8. Implement the `searchBarTextDidEndEditing` and set `isSearching` to `false`.
 6. In `ViewDidLoad` set the Search Bar's delegate property equal to `self` 
 
 ##### Segue to Post Detail View

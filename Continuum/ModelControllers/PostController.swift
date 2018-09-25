@@ -8,6 +8,7 @@
 
 import UIKit
 import CloudKit
+import UserNotifications
 
 extension PostController {
     static let PostsChangedNotification = Notification.Name("PostsChangedNotification")
