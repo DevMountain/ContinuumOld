@@ -146,7 +146,7 @@ class PostController{
         
         let operation = CKQueryOperation(query: query)
         operation.desiredKeys = ["caption", "photoData", "timestamp"]
-        operation.resultsLimit = 12
+        operation.resultsLimit = 5
         operation.qualityOfService = .userInteractive
         
         var newPosts = [Post]()
@@ -170,6 +170,7 @@ class PostController{
                 
             }
             self.posts = newPosts
+            completion(newPosts, nil)
             
         }
         publicDB.add(operation)
