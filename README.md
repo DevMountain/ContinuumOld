@@ -578,6 +578,10 @@ Update the Post List view to support Pull to Refresh to initiate a sync operatio
 
 At this point the app should support basic push and fetch syncing from CloudKit. Use your Simulator and your Device to create new `Post` and `Comment` objects. Use the Refresh Control to initiate new sync operations between the two instances of your app. Check for and fix any bugs.
 
+![screen shot 2018-09-26 at 12 13 12 pm](https://user-images.githubusercontent.com/23179585/46100095-d8635600-c185-11e8-9715-9f8a64d5536e.png)
+
+When you tap on a post cell it should bring you to the detailVC. The comments that belong to that post should be fetched. 
+
 ## Part Four - Intermediate CloudKit: Subscriptions, Push Notifications
 
 * Use subscriptions to generate push notifications
