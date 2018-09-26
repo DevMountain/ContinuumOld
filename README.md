@@ -243,23 +243,6 @@ Use a UISearchbar to allow a user to search through different posts for the give
 8. Implement the `searchBarTextDidEndEditing` and set `isSearching` to `false`.
 6. In `ViewDidLoad` set the Search Bar's delegate property equal to `self` 
 
-##### Segue to Post Detail View
-
-Remember that even though the Timeline view and the Search Results view are displaying similar cells and model objects, you are working with separate view controllers with separate cells and instances of table views.
-
-The segue from a `Post` should take the user to the Post Detail scene, regardless of whether that is from the Timeline view or the Search Results view.
-
-To do so, implement the `UITableViewDelegate` `didSelectRowAt indexPath` function on the Search Results scene to manually call the `toPostDetail` segue _from the Search scene_.
-
-1. Adopt the `UITableViewDelegate` on the Search Results scene and add the `didSelectRowAt indexPath` delegate function. Implement the function by capturing the sending cell and telling the Search Result scene's `presentingViewController` to `performSegue(withIdentifier: String...)` and send the selected cell so that the Search scene can get the selected `Post`.
-    * note: Every view controller class has an optional `presentingViewController` reference to the view controller that presented it. In this case, the presenting view controller of the Search Results scene is the Timeline scene. So this step will manually call the `performSegueWithIdentifier` on the Search scene.
-2. Update the `performSegue(withIdentifier: String...)` function on the Search Scene to capture and segue to the Post Detail scene with the correct post. Try to do so without looking at the solution code.
-    * note: You must check if the `tableView` can get an `indexPath` for the sender. If it can, that means that the cell was from the Search scene's `tableView`. If it can't, that means the cell is from the Search Result scene's `tableView` and that the user tapped a search result. If that is the case, capture the `Post` from the `resultsArray` on the `searchResultscontroller`.
-    * note: You can access the `searchResultsController` by calling `(searchController.searchResultsController as? SearchResultsTableViewController)`
-
-Try to work through the Search segue without looking at the solution code. Understanding this pattern will solidify your understanding of many object-oriented programming patterns.
-
-
 ### Image Picker Controller
 
 #### Photo Select Child Scene
