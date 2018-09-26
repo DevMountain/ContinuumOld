@@ -515,23 +515,41 @@ There are a number of approaches you could take to fetching new records. For Tim
 
 Note: If you want the challenge, you could modify the following functions so that you only fetch the records you don't already have on the device. **This is not required, and is a Black Diamond**
 
-##### Fetching Comments
-
- We're going to create a function that will allow us to fetch all the comments for a specific post we give it.
-
-1. Add a fetchCommentsFor(post: Post, ...) function that has a completion closure. Give the completion a default value of an empty closure.
-2. Create a constant that holds a `CKReference` with the value of the Post's `cloudKitRecord` or `cloudKitRecordID` (depending on which CKReference initializer you use. Either should work fine)
-3. Because we don't want to fetch every comment ever created, we must use a different `NSPredicate` than the default one. Create a predicate that checks the value of the correct field that corresponds to the post `CKReference` on the Comment record against the `CKReference` you created in the last step.
-4. Call the `CloudKitManager.shared.fetchRecordsWithType` function, making sure to pass in the predicate you just created. In the completion closure of the function, follow the common pattern of checking for errors, making sure the records exist, then create an array of Comment objects however you prefer.
-5. Set the value of the array of comments in the post passed into this function to the comments you just initialized in the previous step.
 
 
 ##### Fetching Posts
 
-1. Add a `fetchPosts` function that has a completion closure. Give the completion a default value of an empty closure.
-2. Call the `CloudKitManager.shared.fetchRecordsWithType` function. Use the function's completion block to check for errors, then initialize an array of Posts from the records returned.
-3. Loop through the array of post and call the `fetchCommentsFor(post: Post...)` you made in the last section. Note: In order for this loop to work, you will need to use a dispatch group to make sure that each call of the  `fetchCommentsFor(post: Post...)` comes back and completes before moving on.
-4. In the dispatch group's `notify` function, set the value of the `PostController`'s `posts` array to the posts you just initialized, and call completion.
+1. Add a `fetchPosts` function that has a completion closure. Give the completion an array of optional `[Post]?` 's.
+2. Call the `publicDB` property to perform a query. Now we know we need tom make a `CKQuery` and a `NSPredicate`. The preicate value will be set to true which means it will fetch every post.
+3. Handel the error 
+4. Unwrape the records, and `compactMap` through your failable initializer of `Post` and pass in $0 as your argument. This will return a new array of posts fetched from our publicDB. 
+5. Don't for get to set your local array to the new array of posts. This is how the TVC will populate all our posts. And call completion. 
+
+Note! Option click on `perfomr(query)`. It says "Do not use this method when the number of returned records is potentially more than a few hundred records; when more records are needed, create an execute a CKQueryOperation". Instagram doesn't fetch everysigle post for the useers that you follow. At the bottom of this ReadMe, there is an advanced fetching video to cover how to fetch paginated posts. The above steps work, but if we get a lot of users, this could break our app. 
+
+
+##### Fetching Comments
+
+ We're going to create a function that will allow us to fetch all the comments for a specific post we give it.
+
+1. Add a fetchCommentsFor(post: Post, ...) function that has a completion closure. Give the completion a Bool.
+2. Call your `publicDB` to perfomr a query. 
+3. Because we don't want to fetch every comment ever created, we must use a different `NSPredicate` than the default one. Create a predicate that checks the value of the correct field that corresponds to the post `CKReference` on the Comment record against the `CKReference` you created in the last step.
+4. Add a second predicate to includes all of the commentID's that have NOT been fetched. (If stuck hit the down arrow)
+
+<details><summary> Filter comments </summary><br>
+    
+        let postRefence = post.recordID
+        let predicate = NSPredicate(format: "postReference == %@", postRefence)
+        let commentIDs = post.comments.compactMap({$0.recordID})
+        let predicate2 = NSPredicate(format: "NOT(recordID IN %@)", commentIDs)
+        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate, predicate2]
+        let query = CKQuery(recordType: "Comment", predicate: compoundPredicate) 
+</details>
+
+
+5. In the completion closure of the perform(query) , follow the common pattern of checking for errors, making sure the records exist, then create an array of Comment objects however you prefer.
+6. Set the value of the array of comments in the post passed into this function to the comments you just initialized in the previous step.
 
 
 #### NotificationCenter
