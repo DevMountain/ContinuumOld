@@ -166,7 +166,7 @@ class PostController{
             
             // if there are more results go fetch them
             if let queryCoursor = cursor {
-                // TODO: - make it paginated
+               
                 let continuedQueryOperation = CKQueryOperation(cursor: queryCoursor)
                 continuedQueryOperation.recordFetchedBlock = operation.recordFetchedBlock
                 continuedQueryOperation.queryCompletionBlock = operation.queryCompletionBlock
@@ -180,13 +180,6 @@ class PostController{
         publicDB.add(operation)
     }
     
-    /*             if let queryCoursor = cursor {
-     let continuedQueryOperation = CKQueryOperation(cursor: queryCoursor)
-     continuedQueryOperation.recordFetchedBlock = operation.recordFetchedBlock
-     continuedQueryOperation.queryCompletionBlock = operation.queryCompletionBlock
-     self.publicDB.add(continuedQueryOperation)
-     
-     }*/
     
     func fetchComments(from post: Post, completion: @escaping (Bool) -> Void) {
         let postRefence = post.recordID
