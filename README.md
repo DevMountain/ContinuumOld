@@ -73,6 +73,7 @@ The second tab is a separate navigation controller that will hold a view control
 6. Add a `AddPostTableViewController` subclass of `UITableViewController` and assign it to the Add Post scene from step 5.
 
 Your Storyboard should be simple skeleton resembeling the set up below:
+![Alt text](/Photos/storyboard1.png?raw=true "Storyboard 1")
 
 
 ### Implement Model
