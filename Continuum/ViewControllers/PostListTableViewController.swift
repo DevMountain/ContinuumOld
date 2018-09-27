@@ -9,7 +9,8 @@
 import UIKit
 import CloudKit
 
-class PostListTableViewController: UITableViewController, UISearchBarDelegate {
+class PostListTableViewController: UITableViewController, UISearchBarDelegate, PostsWereAddedToDelegate {
+
     
     @IBOutlet weak var postSearchBar: UISearchBar!
     
@@ -32,15 +33,18 @@ class PostListTableViewController: UITableViewController, UISearchBarDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         postSearchBar.delegate = self
-//        tableView.prefetchDataSource = self 
+//        tableView.prefetchDataSource = self
+//        PostController.shared.delegate = self
+        
         
         let nc = NotificationCenter.default
         nc.addObserver(self, selector: #selector(postsChanged(_:)), name: PostController.PostsChangedNotification, object: nil)
         
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 350
-//        fetchAllPosts()
-        loadPhotos()
+        PostController.shared.fetchQueriedPosts()
+
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -50,8 +54,19 @@ class PostListTableViewController: UITableViewController, UISearchBarDelegate {
     }
     
     @objc func postsChanged(_ notification: Notification) {
-        tableView.reloadData()
+
+        let indexPath = IndexPath(item: PostController.shared.posts.count - 1, section: 0)
+        
+        self.tableView.insertRows(at: [indexPath], with: .fade)
     }
+    
+    func postsWereAddedTo() {
+
+        let indexPath = IndexPath(item: PostController.shared.posts.count - 1, section: 0)
+
+        self.tableView.insertRows(at: [indexPath], with: .fade)
+    }
+    
     
     var queriedPosts = [Post]()
     var postRecords: [CKRecord] = []
@@ -71,6 +86,9 @@ class PostListTableViewController: UITableViewController, UISearchBarDelegate {
         }
         operation.desiredKeys = ["caption", "photoData", "timestamp"]
         operation.resultsLimit = 5
+        operation.queuePriority = .veryHigh
+        operation.qualityOfService = .userInteractive
+  
         
         operation.recordFetchedBlock = { [unowned self] record in
             guard let post = Post(record: record) else { return }
@@ -78,6 +96,7 @@ class PostListTableViewController: UITableViewController, UISearchBarDelegate {
             print(self.queriedPosts.count)
             DispatchQueue.main.sync {
                 let indexPath = IndexPath(item: self.queriedPosts.count - 1, section: 0)
+                print(indexPath)
                 self.tableView.insertRows(at: [indexPath], with: .fade)
             }
         }
@@ -122,14 +141,14 @@ class PostListTableViewController: UITableViewController, UISearchBarDelegate {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return isSearching ? resultsArray?.count ?? 0: queriedPosts.count
+        return isSearching ? resultsArray?.count ?? 0: PostController.shared.posts.count
         
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as? PostTableViewCell
 //        let post = resultsArray?[indexPath.row] as? Post
-        let dataSource = isSearching ? resultsArray : queriedPosts
+        let dataSource = isSearching ? resultsArray : PostController.shared.posts
         let post = dataSource?[indexPath.row]
         cell?.post = post as? Post
         return cell ?? UITableViewCell()
@@ -164,7 +183,7 @@ class PostListTableViewController: UITableViewController, UISearchBarDelegate {
         if segue.identifier == "toPostDetailVC"{
             let destinationVC = segue.destination as? PostDetailTableViewController
             guard let indexPath = tableView.indexPathForSelectedRow else {return}
-            let post = queriedPosts[indexPath.row]
+            let post = PostController.shared.posts[indexPath.row]
             destinationVC?.post = post
         }
     }

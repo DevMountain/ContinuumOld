@@ -14,6 +14,10 @@ extension PostController {
     static let PostsChangedNotification = Notification.Name("PostsChangedNotification")
 }
 
+protocol PostsWereAddedToDelegate: class {
+    func postsWereAddedTo()
+}
+
 class PostController{
     
     static let shared = PostController()
@@ -23,6 +27,7 @@ class PostController{
     }
     
     let publicDB = CKContainer.default().publicCloudDatabase
+    weak var delegate: PostsWereAddedToDelegate?
     
     var posts = [Post]() {
         didSet {
@@ -152,12 +157,13 @@ class PostController{
         operation.desiredKeys = ["caption", "photoData", "timestamp"]
         operation.resultsLimit = 5
         operation.qualityOfService = .userInteractive
-        
+
         var newPosts = [Post]()
 //        var continuedPosts = [Post]()
         operation.recordFetchedBlock = { record in
             guard let post = Post(record: record) else { print("NO BETS"); return }
             newPosts.append(post)
+         
         }
         operation.queryCompletionBlock = { [unowned self] (cursor, error) in
             if let error = error {
@@ -177,6 +183,54 @@ class PostController{
             completion(newPosts, nil)
             
         }
+        publicDB.add(operation)
+    }
+    
+    func fetchQueriedPosts(cursor: CKQueryOperation.Cursor? = nil) {
+        
+        let predicate = NSPredicate(value: true)
+        let query = CKQuery(recordType: "Post", predicate: predicate)
+        query.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+        let operation: CKQueryOperation
+        
+        if let cursor = cursor {
+            operation = CKQueryOperation(cursor: cursor)
+        } else {
+            let predicate = NSPredicate(value: true)
+            let query = CKQuery(recordType: "Post", predicate: predicate)
+            query.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+            operation = CKQueryOperation(query: query)
+        }
+        operation.desiredKeys = ["caption", "photoData", "timestamp"]
+        operation.resultsLimit = 5
+        operation.queuePriority = .veryHigh
+        operation.qualityOfService = .userInteractive
+        
+        operation.recordFetchedBlock = { [unowned self] record in
+            guard let post = Post(record: record) else { return }
+            self.posts.append(post)
+            print("🎃 \(Thread.isMainThread)")
+            print(self.posts.count)
+            DispatchQueue.main.sync {
+                print("SYNC \(Thread.isMainThread)")
+                self.delegate?.postsWereAddedTo()
+            }
+        }
+        let publicDB = CKContainer.default().publicCloudDatabase
+        operation.queryCompletionBlock = { [unowned self] cursor, error in
+            if let error = error {
+                print("Error fethcing posts \(error)")
+            } else if let cursor = cursor {
+                self.fetchQueriedPosts(cursor: cursor)
+                print("Fetching more results \(self.posts.count)")
+            } else {
+                print("Done")
+                DispatchQueue.main.async {
+                   
+                }
+            }
+        }
+   
         publicDB.add(operation)
     }
     
