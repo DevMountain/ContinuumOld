@@ -343,7 +343,7 @@ class PostController{
                         print("Successfully removed the subscription to the post with caption: \(post.caption)")
                         completion?(true, nil)
                     }else{
-                       print("Whoops somthing went wrong removing the subscription to the post with caption: \(post.caption)") ; completion?(true, nil)
+                       print("Whoops somthing went wrong removing the subscription to the post with caption: \(post.caption)")
                         completion?(false, nil)
                     }
                 })
@@ -358,7 +358,7 @@ class PostController{
                         print("Successfully added the subscription to the post with caption: \(post.caption)")
                         completion?(true, nil)
                     }else{
-                        print("Whoops somthing went wrong adding the subscription to the post with caption: \(post.caption)") ; completion?(true, nil)
+                        print("Whoops somthing went wrong adding the subscription to the post with caption: \(post.caption)")
                         completion?(false, nil)
                     }
                 })

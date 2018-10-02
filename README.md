@@ -544,13 +544,9 @@ Note! Option click on `perfomr(query)`. It says "Do not use this method when the
 4. In Post.swift, create a `didSet` property observer to the `comments` property.
 5. Post a `PostController.PostCommentsChangedNotification`. in the `didSet` created in the previous step. Again this must be done on the main queue. Use the `Post` whose comments changed as the object of the notification. (Since you are in the Post class, you would do that by saying `self`)
 
-#### Update the Post List Table View Controller
-
-Update the Post List view to support Pull to Refresh to initiate a sync operation.
-
 1. Add a new function to request a full sync operation that takes an optional completion closure. Implement the function by turning on the network activity indicator, calling the `performFullSync` function on the `PostController`, and turning off the network activity indicator in the completion.
 2. Call the function in the `viewDidLoad` lifecycle function to initiate a full sync when the user first opens the application.
-3. Add and implement a `UIRefreshControl` IBAction that uses the sync function.
+
 4. In `viewDidLoad()`, start observing the `PostController.PostsChangedNotification`. In your observation method, reload the table view.
 
 #### Update the Post Detail Table View Controller
@@ -560,11 +556,17 @@ Update the Post List view to support Pull to Refresh to initiate a sync operatio
 
 #### Check Functionality
 
-At this point the app should support basic push and fetch syncing from CloudKit. Use your Simulator and your Device to create new `Post` and `Comment` objects. Use the Refresh Control to initiate new sync operations between the two instances of your app. Check for and fix any bugs.
+At this point the app should support basic push and fetch syncing from CloudKit. Use your Simulator and your Device to create new `Post` and `Comment` objects. Check for and fix any bugs.
 
 ![screen shot 2018-09-26 at 12 13 12 pm](https://user-images.githubusercontent.com/23179585/46100095-d8635600-c185-11e8-9715-9f8a64d5536e.png)
 
 When you tap on a post cell it should bring you to the detailVC. The comments that belong to that post should be fetched. 
+
+### Black Diamonds:
+
+* Update the Post List view to support Pull to Refresh to initiate a sync operation by implementing a `UIRefreshControl` IBAction that uses the sync function.
+* Provide feedback on the Readme and expectations for Part Three to a mentor or instructor.
+
 
 ## Part Four - Intermediate CloudKit: Subscriptions, Push Notifications
 
