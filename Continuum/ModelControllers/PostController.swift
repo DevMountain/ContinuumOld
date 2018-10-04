@@ -45,6 +45,7 @@ class PostController{
                 let errrorText = "Sign into iCloud in Settings"
                 switch status {
                 case .available:
+                    self?.presentErrorAlert(errorTitle: "RAGGING BULLL", errorMessage: "Loves hotdogs")
                    completion(true)
                 case .noAccount:
                     let noAccount = "No account found"
