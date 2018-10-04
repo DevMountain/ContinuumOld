@@ -9,7 +9,11 @@
 /* Begin PBXBuildFile section */
 		01C6B281215415E600FBC26D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C6B280215415E600FBC26D /* CloudKit.framework */; };
 		01C6B28421541CFF00FBC26D /* Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C6B28321541CFF00FBC26D /* Extentions.swift */; };
+<<<<<<< HEAD
+		01C7AC5421667F0F00250503 /* AddPost.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 01C7AC5321667F0F00250503 /* AddPost.storyboard */; };
+=======
 		F73515A421667ED3005DA280 /* CommentsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F73515A321667ED3005DA280 /* CommentsViewController.storyboard */; };
+>>>>>>> e4915ee09f2c8991ffbe2cba4037f0f0f18999f4
 		F73AC97E215044280012A8DE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73AC97D215044280012A8DE /* AppDelegate.swift */; };
 		F73AC983215044280012A8DE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F73AC981215044280012A8DE /* Main.storyboard */; };
 		F73AC985215044290012A8DE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F73AC984215044290012A8DE /* Assets.xcassets */; };
@@ -28,7 +32,11 @@
 /* Begin PBXFileReference section */
 		01C6B280215415E600FBC26D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		01C6B28321541CFF00FBC26D /* Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extentions.swift; sourceTree = "<group>"; };
+<<<<<<< HEAD
+		01C7AC5321667F0F00250503 /* AddPost.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AddPost.storyboard; sourceTree = "<group>"; };
+=======
 		F73515A321667ED3005DA280 /* CommentsViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = CommentsViewController.storyboard; sourceTree = "<group>"; };
+>>>>>>> e4915ee09f2c8991ffbe2cba4037f0f0f18999f4
 		F73AC97A215044280012A8DE /* Continuum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Continuum.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F73AC97D215044280012A8DE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F73AC982215044280012A8DE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
