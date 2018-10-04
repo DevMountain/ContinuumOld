@@ -147,45 +147,6 @@ class PostController{
         }
     }
     
-    func fetchQueriedPosts(completion: @escaping (([Post]?, [Post]?) -> Void)) {
-        let predicate = NSPredicate(value: true)
-        let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
-        let query = CKQuery(recordType: "Post", predicate: predicate)
-        query.sortDescriptors = [sortDescriptor]
-        
-        let operation = CKQueryOperation(query: query)
-        operation.desiredKeys = ["caption", "photoData", "timestamp"]
-        operation.resultsLimit = 5
-        operation.qualityOfService = .userInteractive
-
-        var newPosts = [Post]()
-//        var continuedPosts = [Post]()
-        operation.recordFetchedBlock = { record in
-            guard let post = Post(record: record) else { print("NO BETS"); return }
-            newPosts.append(post)
-         
-        }
-        operation.queryCompletionBlock = { [unowned self] (cursor, error) in
-            if let error = error {
-                print("Error with post queryCompletionBlock  \(error) \(error.localizedDescription)")
-            }
-            
-            // if there are more results go fetch them
-            if let queryCoursor = cursor {
-               
-                let continuedQueryOperation = CKQueryOperation(cursor: queryCoursor)
-                continuedQueryOperation.recordFetchedBlock = operation.recordFetchedBlock
-                continuedQueryOperation.queryCompletionBlock = operation.queryCompletionBlock
-                self.publicDB.add(continuedQueryOperation)
-                
-            }
-            self.posts = newPosts
-            completion(newPosts, nil)
-            
-        }
-        publicDB.add(operation)
-    }
-    
     func fetchQueriedPosts(cursor: CKQueryOperation.Cursor? = nil) {
         
         let predicate = NSPredicate(value: true)

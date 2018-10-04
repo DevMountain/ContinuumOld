@@ -18,24 +18,11 @@ class PostListTableViewController: UITableViewController, UISearchBarDelegate, P
     
     var isSearching: Bool = false
     
-    lazy var spinner: UIActivityIndicatorView = {
-        let spinner = UIActivityIndicatorView(style: .whiteLarge)
-        spinner.hidesWhenStopped = true
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(spinner)
-        NSLayoutConstraint.activate([
-            spinner.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            spinner.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
-            ])
-        return spinner
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         postSearchBar.delegate = self
-//        tableView.prefetchDataSource = self
+        tableView.prefetchDataSource = self
 //        PostController.shared.delegate = self
-        
         
         let nc = NotificationCenter.default
         nc.addObserver(self, selector: #selector(postsChanged(_:)), name: PostController.PostsChangedNotification, object: nil)
@@ -43,8 +30,6 @@ class PostListTableViewController: UITableViewController, UISearchBarDelegate, P
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 350
         PostController.shared.fetchQueriedPosts()
-
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -68,74 +53,7 @@ class PostListTableViewController: UITableViewController, UISearchBarDelegate, P
     }
     
     
-    var queriedPosts = [Post]()
-    var postRecords: [CKRecord] = []
-    private func loadPhotos(cursor:  CKQueryOperation.Cursor? = nil) {
-        DispatchQueue.main.async {
-            self.spinner.startAnimating()
-        }
-        let operation: CKQueryOperation
-        
-        if let cursor = cursor {
-            operation = CKQueryOperation(cursor: cursor)
-        } else {
-            let predicate = NSPredicate(value: true)
-            let query = CKQuery(recordType: "Post", predicate: predicate)
-            query.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
-            operation = CKQueryOperation(query: query)
-        }
-        operation.desiredKeys = ["caption", "photoData", "timestamp"]
-        operation.resultsLimit = 5
-        operation.queuePriority = .veryHigh
-        operation.qualityOfService = .userInteractive
-  
-        
-        operation.recordFetchedBlock = { [unowned self] record in
-            guard let post = Post(record: record) else { return }
-            self.queriedPosts.append(post)
-            print(self.queriedPosts.count)
-            DispatchQueue.main.sync {
-                let indexPath = IndexPath(item: self.queriedPosts.count - 1, section: 0)
-                print(indexPath)
-                self.tableView.insertRows(at: [indexPath], with: .fade)
-            }
-        }
-        let publicDB = CKContainer.default().publicCloudDatabase
-        operation.queryCompletionBlock = { [unowned self] cursor, error in
-            if let error = error {
-                print("Error fethcing posts \(error)")
-            } else if let cursor = cursor {
-                self.loadPhotos(cursor: cursor)
-                print("Fetching more results \(self.queriedPosts.count)")
-            } else {
-                print("Done")
-                DispatchQueue.main.async {
-                    self.spinner.stopAnimating()
-                }
-            }
-        }
-        publicDB.add(operation)
-        
-    }
-    
-    
-    func fetchAllPosts() {
-        PostController.shared.fetchQueriedPosts { (firstPosts, continuedPosts) in
-            if firstPosts != nil {
-//                guard let firstPosts = firstPosts else { return }
-//                let indexPath = IndexPath(row: firstPosts.count - 1, section: 0)
-                DispatchQueue.main.async {
 
-                    self.tableView.reloadData()
-                }
-            }
-            if continuedPosts != nil {
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            }
-        }
-    }
 
     // MARK: - Table view data source
 
@@ -194,13 +112,12 @@ extension PostListTableViewController: UITableViewDataSourcePrefetching {
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         
         for indexPath in indexPaths {
-            let post = queriedPosts[indexPath.row]
-            guard let url = post.imageAsset?.fileURL else {print("No tep url"); return }
-            print("Prefetching \(post.caption)")
+            
+            let post = PostController.shared.posts[indexPath.row]
+            guard let url = post.imageAsset?.fileURL else { return }
             URLSession.shared.dataTask(with: url).resume()
         }
     }
     
-    
-    
+
 }
