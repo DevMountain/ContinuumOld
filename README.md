@@ -243,23 +243,6 @@ Use a UISearchbar to allow a user to search through different posts for the give
 8. Implement the `searchBarTextDidEndEditing` and set `isSearching` to `false`.
 6. In `ViewDidLoad` set the Search Bar's delegate property equal to `self` 
 
-##### Segue to Post Detail View
-
-Remember that even though the Timeline view and the Search Results view are displaying similar cells and model objects, you are working with separate view controllers with separate cells and instances of table views.
-
-The segue from a `Post` should take the user to the Post Detail scene, regardless of whether that is from the Timeline view or the Search Results view.
-
-To do so, implement the `UITableViewDelegate` `didSelectRowAt indexPath` function on the Search Results scene to manually call the `toPostDetail` segue _from the Search scene_.
-
-1. Adopt the `UITableViewDelegate` on the Search Results scene and add the `didSelectRowAt indexPath` delegate function. Implement the function by capturing the sending cell and telling the Search Result scene's `presentingViewController` to `performSegue(withIdentifier: String...)` and send the selected cell so that the Search scene can get the selected `Post`.
-    * note: Every view controller class has an optional `presentingViewController` reference to the view controller that presented it. In this case, the presenting view controller of the Search Results scene is the Timeline scene. So this step will manually call the `performSegueWithIdentifier` on the Search scene.
-2. Update the `performSegue(withIdentifier: String...)` function on the Search Scene to capture and segue to the Post Detail scene with the correct post. Try to do so without looking at the solution code.
-    * note: You must check if the `tableView` can get an `indexPath` for the sender. If it can, that means that the cell was from the Search scene's `tableView`. If it can't, that means the cell is from the Search Result scene's `tableView` and that the user tapped a search result. If that is the case, capture the `Post` from the `resultsArray` on the `searchResultscontroller`.
-    * note: You can access the `searchResultsController` by calling `(searchController.searchResultsController as? SearchResultsTableViewController)`
-
-Try to work through the Search segue without looking at the solution code. Understanding this pattern will solidify your understanding of many object-oriented programming patterns.
-
-
 ### Image Picker Controller
 
 #### Photo Select Child Scene
@@ -562,13 +545,9 @@ Note! Option click on `perfomr(query)`. It says "Do not use this method when the
 4. In Post.swift, create a `didSet` property observer to the `comments` property.
 5. Post a `PostController.PostCommentsChangedNotification`. in the `didSet` created in the previous step. Again this must be done on the main queue. Use the `Post` whose comments changed as the object of the notification. (Since you are in the Post class, you would do that by saying `self`)
 
-#### Update the Post List Table View Controller
-
-Update the Post List view to support Pull to Refresh to initiate a sync operation.
-
 1. Add a new function to request a full sync operation that takes an optional completion closure. Implement the function by turning on the network activity indicator, calling the `performFullSync` function on the `PostController`, and turning off the network activity indicator in the completion.
 2. Call the function in the `viewDidLoad` lifecycle function to initiate a full sync when the user first opens the application.
-3. Add and implement a `UIRefreshControl` IBAction that uses the sync function.
+
 4. In `viewDidLoad()`, start observing the `PostController.PostsChangedNotification`. In your observation method, reload the table view.
 
 #### Update the Post Detail Table View Controller
@@ -578,11 +557,17 @@ Update the Post List view to support Pull to Refresh to initiate a sync operatio
 
 #### Check Functionality
 
-At this point the app should support basic push and fetch syncing from CloudKit. Use your Simulator and your Device to create new `Post` and `Comment` objects. Use the Refresh Control to initiate new sync operations between the two instances of your app. Check for and fix any bugs.
+At this point the app should support basic push and fetch syncing from CloudKit. Use your Simulator and your Device to create new `Post` and `Comment` objects. Check for and fix any bugs.
 
 ![screen shot 2018-09-26 at 12 13 12 pm](https://user-images.githubusercontent.com/23179585/46100095-d8635600-c185-11e8-9715-9f8a64d5536e.png)
 
 When you tap on a post cell it should bring you to the detailVC. The comments that belong to that post should be fetched. 
+
+### Black Diamonds:
+
+* Update the Post List view to support Pull to Refresh to initiate a sync operation by implementing a `UIRefreshControl` IBAction that uses the sync function.
+* Provide feedback on the Readme and expectations for Part Three to a mentor or instructor.
+
 
 ## Part Four - Intermediate CloudKit: Subscriptions, Push Notifications
 
