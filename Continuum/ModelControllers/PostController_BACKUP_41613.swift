@@ -68,6 +68,7 @@ class PostController{
             if let appDelegate = UIApplication.shared.delegate,
                 let appWindow = appDelegate.window!,
                 let rootViewController = appWindow.rootViewController {
+<<<<<<< HEAD
                 
                 
                 
@@ -77,6 +78,9 @@ class PostController{
                 
                 rootViewController.showAlertMessage(titleStr: "Odds trevor shot guns a LA CROX", messageStr: "Jayden is stanky")
             
+=======
+                rootViewController.showAlertMessage(titleStr: "Nick sux at Ping Pong.  And coding.", messageStr: "We will not miss him when he leaves tomorrow.")
+>>>>>>> cc66c320f1000e49a4acd975e79f530e83641311
             }
             print("Just kidding we love you Nick.  But you are trash at pingpong")
         }

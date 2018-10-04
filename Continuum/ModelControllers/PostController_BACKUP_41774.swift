@@ -78,7 +78,6 @@ class PostController{
                 rootViewController.showAlertMessage(titleStr: "Odds trevor shot guns a LA CROX", messageStr: "Jayden is stanky")
             
             }
-            print("Just kidding we love you Nick.  But you are trash at pingpong")
         }
         
     }
