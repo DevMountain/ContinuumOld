@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		01C6B281215415E600FBC26D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01C6B280215415E600FBC26D /* CloudKit.framework */; };
 		01C6B28421541CFF00FBC26D /* Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C6B28321541CFF00FBC26D /* Extentions.swift */; };
+		F73515A421667ED3005DA280 /* CommentsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F73515A321667ED3005DA280 /* CommentsViewController.storyboard */; };
 		F73AC97E215044280012A8DE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73AC97D215044280012A8DE /* AppDelegate.swift */; };
 		F73AC983215044280012A8DE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F73AC981215044280012A8DE /* Main.storyboard */; };
 		F73AC985215044290012A8DE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F73AC984215044290012A8DE /* Assets.xcassets */; };
@@ -27,6 +28,7 @@
 /* Begin PBXFileReference section */
 		01C6B280215415E600FBC26D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		01C6B28321541CFF00FBC26D /* Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extentions.swift; sourceTree = "<group>"; };
+		F73515A321667ED3005DA280 /* CommentsViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = CommentsViewController.storyboard; sourceTree = "<group>"; };
 		F73AC97A215044280012A8DE /* Continuum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Continuum.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F73AC97D215044280012A8DE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F73AC982215044280012A8DE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 			children = (
 				F73AC97D215044280012A8DE /* AppDelegate.swift */,
 				F73AC981215044280012A8DE /* Main.storyboard */,
+				F73515A321667ED3005DA280 /* CommentsViewController.storyboard */,
 				F73AC984215044290012A8DE /* Assets.xcassets */,
 				F73AC986215044290012A8DE /* LaunchScreen.storyboard */,
 				F73AC989215044290012A8DE /* Info.plist */,
@@ -225,6 +228,7 @@
 				F73AC988215044290012A8DE /* LaunchScreen.storyboard in Resources */,
 				F73AC985215044290012A8DE /* Assets.xcassets in Resources */,
 				F73AC983215044280012A8DE /* Main.storyboard in Resources */,
+				F73515A421667ED3005DA280 /* CommentsViewController.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
