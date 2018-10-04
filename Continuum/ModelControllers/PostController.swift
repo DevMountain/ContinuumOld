@@ -67,7 +67,8 @@ class PostController{
             if let appDelegate = UIApplication.shared.delegate,
                 let appWindow = appDelegate.window!,
                 let rootViewController = appWindow.rootViewController {
-                rootViewController.showAlertMessage(titleStr: errorTitle, messageStr: errorMessage)
+                rootViewController.showAlertMessage(titleStr: "Odds trevor shot guns a LA CROX", messageStr: "Jayden is stanky")
+            
             }
         }
         
