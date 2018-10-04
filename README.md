@@ -361,7 +361,8 @@ It looks like this:
 ```
 The whole point of the above computed property is to read and write for our photo property. Look up `CKAsset`, it can only take a fileURL. We want to create a temorary file url so we can write to it. Once we are done using the temp url, we have to remove it otherwise it can drain our memory. The TemoraryDirecorty comes from FileMnager and there is already a shared method that can remove the temp url. 
    - 2.3. Remove the temporary file
-```deinit {
+```
+deinit {
         if let url = tempURL {
             do {
                 try FileManager.default.removeItem(at: url)
