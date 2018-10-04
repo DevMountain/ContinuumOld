@@ -16,6 +16,7 @@ class AddPostTableViewController: UITableViewController, UIImagePickerController
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView.backgroundColor = .black
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -23,6 +24,11 @@ class AddPostTableViewController: UITableViewController, UIImagePickerController
             guard let destinationVC = segue.destination as? PhotoSelectViewController else {return}
             destinationVC.delegate = self
         }
+    }
+    
+    func someFunc(){
+        //Contains the Goods
+        print("The Goods")
     }
     
     @IBAction func cancelButtonTapped(_ sender: Any) {

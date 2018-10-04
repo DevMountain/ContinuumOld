@@ -64,7 +64,6 @@ class PostController{
     
     func presentErrorAlert(errorTitle: String, errorMessage: String) {
         DispatchQueue.main.async {
-            print("If you didn't know already Nick is a hillbilly")
             if let appDelegate = UIApplication.shared.delegate,
                 let appWindow = appDelegate.window!,
                 let rootViewController = appWindow.rootViewController {
