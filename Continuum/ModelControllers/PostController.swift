@@ -45,7 +45,6 @@ class PostController{
                 let errrorText = "Sign into iCloud in Settings"
                 switch status {
                 case .available:
-                    self?.presentErrorAlert(errorTitle: "RAGGING BULLL", errorMessage: "Loves hotdogs")
                    completion(true)
                 case .noAccount:
                     let noAccount = "No account found"
@@ -64,13 +63,11 @@ class PostController{
     
     func presentErrorAlert(errorTitle: String, errorMessage: String) {
         DispatchQueue.main.async {
-            print("If you didn't know already Nick is a hillbilly")
             if let appDelegate = UIApplication.shared.delegate,
                 let appWindow = appDelegate.window!,
                 let rootViewController = appWindow.rootViewController {
-                rootViewController.showAlertMessage(titleStr: "Nick sux at Ping Pong.  And coding.", messageStr: "We will not miss him when he leaves tomorrow.")
+                rootViewController.showAlertMessage(titleStr: errorTitle, messageStr: errorMessage)
             }
-            print("Just kidding we love you Nick.  But you are trash at pingpong")
         }
         
     }
