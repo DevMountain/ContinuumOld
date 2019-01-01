@@ -134,7 +134,7 @@ _Note: These CRUD functions will only work locally right now.  We will integrate
 
 Implement the Post List Table View Controller. You will use a similar cell to display posts in multiple scenes in your application. Create a custom `PostTableViewCell` that can be reused in different scenes.
 
-1. Implement the scene in Interface Builder by creating a custom cell with an image view that fills most of the cell, a label for the posts caption (the first comment in its array), and another label for diplaying the number of comments a post has.  With the caption label selected, turn the number of lines down to 0 to enable this label to spread to the necessary number of text lines.  Constrain the UI elements appropriately.  Your `PostTableViewCell` should look similar to the one below.
+1. Implement the scene in Interface Builder by creating a custom cell with an image view that fills most of the cell, a label for the posts caption, and another label for displaying the number of comments a post has.  With the caption label selected, turn the number of lines down to 0 to enable this label to spread to the necessary number of text lines.  Constrain the UI elements appropriately.  Your `PostTableViewCell` should look similar to the one below.
 
 ![Alt text](/Photos/storyboard2.png?raw=true "Storyboard 2")
 
