@@ -33,16 +33,16 @@ Students who complete this project independently are able to:
 
 ## Why CloudKit? 
 
-If you where in an interview and a developer asked you why you chose to use CloudKit, what woud your answer be? "Because my mentors taught me", would be a lazy answer. Be confident with your descison to show you know what you're talking about. My reasons below would be as follows. 
+If you were in an interview and a developer asked you why you chose to use CloudKit, what would your answer be? "Because my mentors taught me", would be a lazy answer. Be confident with your decision to show you know what you're talking about. My reasons would be as follows. 
 
-* CloudKit is organic. You don't have to download anything. It forces you to become a better Apple programmer by following their convetions and design principles. 
+* CloudKit is organic. You don't have to download anything. It forces you to become a better Apple programmer by following their conventions and design principles. 
 * Its free! 
 * Free authentication.
 * Great privacy protection. 
-* Really good resources, from Apple Programming Guides, WWDC videos on cloudKit best practices, easy to handel new updates. 
+* Really good resources, from Apple Programming Guides, WWDC videos on cloudKit best practices, easy to handle new updates. 
 
 
-All of these apps use cloudKit. Millions of users make use of these app every day. If you work hard this week to learn these covered concepts, you'll see it pay off in your capstones. If you work hard in your capstones, you'll literally see you're hard work get paid off.
+All of these apps use CloudKit. Millions of users make use of these apps every day. If you work hard this week to learn these covered concepts, you'll see it pay off in your capstones. If you work hard in your capstones, you'll literally see your hard work pay off.
 
 
 ![cloudkitapps](https://user-images.githubusercontent.com/23179585/46048479-cbdbf080-c0e6-11e8-819a-e3004c648a9f.png)
@@ -72,7 +72,7 @@ The second tab is a separate navigation controller that will hold a view control
 5. Add a `UITableViewController` Add Post scene, embed it into a `UINavigationController`. Make this navigation controller your second tab in the tab bar controller.
 6. Add a `AddPostTableViewController` subclass of `UITableViewController` and assign it to the Add Post scene from step 5.
 
-Your Storyboard should be simple skeleton resembeling the set up below:
+Your Storyboard should be simple skeleton resembling the set up below:
 ![Alt text](/Photos/storyboard1.png?raw=true "Storyboard 1")
 
 
@@ -88,7 +88,7 @@ Create a `Post` model object that will hold image data and comments.
 
 1. Add a new `Post` class to your project.
 2. Add a `photoData` property of type `Data?`, a `timestamp` `Date` property, a `caption` of type `String`, and a `comments` property of type `[Comment]`.
-3. Add a computed property, `photo` with a getter which returns a `UIImage` initialized using the data in `photoData` and a setter which adjusts the value of the `photoData` property to match that of the `newValue` for UIImage.  _Notice, the initalizer for `UIImage(data: )` is failable and will return an optional UIImage and that `newValue.jpegData(compressionQuality: )` optional data.  You will need to handle these optionals by making `photoData` and `photo` optional properties._
+3. Add a computed property, `photo` with a getter which returns a `UIImage` initialized using the data in `photoData` and a setter which adjusts the value of the `photoData` property to match that of the `newValue` for UIImage.  _Notice, the initializer for `UIImage(data: )` is failable and will return an optional UIImage and that `newValue.jpegData(compressionQuality: )` optional data.  You will need to handle these optionals by making `photoData` and `photo` optional properties._
 
 ```
 var photo: UIImage?{
@@ -112,7 +112,7 @@ Create a `Comment` model object that will hold user-submitted text comments for 
 2. Add a `text` property of type `String`, a `timestamp` `Date` property, and a weak `post` property of type `Post?`.
 * The comment objects reference to the post object should be weak in order to avoid retain cycles later on.  
 `weak var post: Post?`
-3. Add an initializer that accepts text, timestamp, and a post. Provide a default values for the `timestamp` argument equal to the current date, so it can be ommitted if desired.
+3. Add an initializer that accepts text, timestamp, and a post. Provide a default values for the `timestamp` argument equal to the current date, so it can be omitted if desired.
 
 ### Model Object Controller
 
@@ -124,9 +124,9 @@ Add and implement the `PostController` class that will be used for CRUD operatio
 4. Add an `addComment` function that takes a `text` parameter as a `String`, and a `Post` parameter. This should return a Comment object in a completion closure.
 * _For now this function will only initialize a new comment and append it to the given post's comments array._
 5. Add a `createPostWith` function that takes an image parameter as a `UIImage` and a caption as a `String`. This should return a Post object in a completion closure.  
-6. The function will need to initalize a post from the image and new comment and append the post to the `PostController`s  `posts` property (think source of truth)
+6. The function will need to initialize a post from the image and new comment and append the post to the `PostController`s  `posts` property (think source of truth)
 
-_Note: These CRUD functions will only work locally right now.  We will integrate Cloudkit further along in the project_
+_Note: These CRUD functions will only work locally right now.  We will integrate CloudKit further along in the project_
 
 ### Wire Up Views
 
@@ -140,7 +140,7 @@ Implement the Post List Table View Controller. You will use a similar cell to di
 
 2. Create a `PostTableViewCell` class, subclass the tableView cell in your storyboard and add the appropriate IBOutlets.
 3. In your `PostTableViewCell` add a `post` variable, and implement an `updateViews` function to the `PostTableViewCell` to update the image view with the `Post`'s photo. Call the function in the didSet of the `post` variable
-3. Keeping with the asthetic of our favorite original photo sharing application, give the imageView an aspect ratio of 1:1.  You will want to do this for all Post Image Views within the app to maintain consistency.  Place a sample photo in your storyboard and explore the options of `Aspect Fill`, `Aspect Fit` and `Scale to Fill`.  The master project will be using `Aspect Fill` with `Clips to Bounds` On.
+3. Keeping with the aesthetic of our favorite original photo sharing application, give the imageView an aspect ratio of 1:1.  You will want to do this for all Post Image Views within the app to maintain consistency.  Place a sample photo in your storyboard and explore the options of `Aspect Fill`, `Aspect Fit` and `Scale to Fill`.  The master project will be using `Aspect Fill` with `Clips to Bounds` On.
 4. Implement the `UITableViewDataSource` functions
 5. Implement the `prepare(for segue: ...)` function to check the segue identifier, capture the detail view controller, index path, selected post, and assign the selected post to the detail view controller.
     * note: You may need to quickly add a `post` property to the `PostDetailTableViewController`.
@@ -152,7 +152,7 @@ Implement the Post Detail View Controller. This scene will be used for viewing p
 Use the table view's header view to display the photo and a toolbar that allows the user to comment, share, or follow. Use the table view cells to display comments.
 
 1. Add a vertical `UIStackView` to the Header of the table view. Add a `UIImageView` and a horizontal `UIStackView` to the stack view. Add 'Comment', 'Share', and 'Follow Post' `UIButtons`s to the horizontal stack view. Set the horizontal stack view to have a center alignment and Fill Equally distribution.  Set the Vertical Stack View to have a center alignment and Fill distribution.
-2. Set up your constraints so that the image view has an apect ratio of 1:1 and a width equal to its the vertical Stack View.  Give the horizontal Stack View an equal width to the vertical Stack View.
+2. Set up your constraints so that the image view has an aspect ratio of 1:1 and a width equal to its the vertical Stack View.  Give the horizontal Stack View an equal width to the vertical Stack View.
 3. Constrain the vertical Stack View to be centered horizontally and vertically in the header view and equal to 80% of the width of the header view (i.e. the users screen width).
 4. In  `PostDetailTableViewController.swift` create an IBOutlet from the Image View named `photoImageView` and an appropriate IBAction from each button.
 3. Update the cell to support comments that span multiple lines without truncating them. Set the `UITableViewCell` to the subtitle style. Set the number of lines for the cells title label to zero. Implement dynamic heights by setting the `tableView.rowHeight` and `tableView.estimatedRowHeight` in the `viewDidLoad`.  See documentation on [UITableView](https://developer.apple.com/documentation/uikit/uitableview) for more details.
@@ -229,7 +229,7 @@ You can use a Playground to test your `SearchableRecord` and `matches(searchTerm
 
 #### PostListTableViewController: UISearchBar & UISearchBarDelegate
 
-Use a UISearchbar to allow a user to search through different posts for the given search text.  This will require the use of the of the `SearchableRecord` protocol and the each models implentation of the `matches(searchTerm: String)` function.  The `PostListTableViewController` will need to conform to the `UISearchBarDelegate` and implement the appropriate delegate method.
+Use a UISearchbar to allow a user to search through different posts for the given search text.  This will require the use of the of the `SearchableRecord` protocol and the each models implementation of the `matches(searchTerm: String)` function.  The `PostListTableViewController` will need to conform to the `UISearchBarDelegate` and implement the appropriate delegate method.
 
 1. Add a `UISearchBar` to the headerView of the  `PostListTableViewController` scene in the main storyboard.  Check the `Shows Cancel Button` in the attributes inspector.  Create an IBOutlet from the search bar to the `PostListTableViewController` class.
 2. Add a `resultsArray` property in the `PostListTableViewController` class that contains an array of `SearchableRecords`
@@ -238,7 +238,7 @@ Use a UISearchbar to allow a user to search through different posts for the give
     * note: You will only display `Post` objects as a result of a search. Use the `PostTableViewCell` to do so.  In `cellForRowAt` function you will need to cast the data pulled out of the results array as a `Post`
 4. In `ViewWillAppear` set the results array equal to the `PostController.shared.posts`.
 5. Adopt the UISearchBarDelegate protocol, and implement the `searchBar(_:textDidChange:)` function.  Within the function filter the posts using the `Post` object's  `matches(searchTerm: String)` function and setting the `resultsArray` equal to the results of the filter.  Call `tableView.reloadData()` at the end of this function.
-6. Implement the `searchBarCancelButtonClicked(_ searchBar:)`  function, using it to set the results array equall to `PostController.shared.posts` then reload the table view.  You should also set the searchBar's text equal to an empty String and resign its first responder.  This will return the feed back to its normal state of displaying all posts when the user cancels a search.
+6. Implement the `searchBarCancelButtonClicked(_ searchBar:)`  function, using it to set the results array equal to `PostController.shared.posts` then reload the table view.  You should also set the searchBar's text equal to an empty String and resign its first responder.  This will return the feed back to its normal state of displaying all posts when the user cancels a search.
 7. Implement the `searchBarTextDidBeginEditing` and set `isSearching` to `true`.
 8. Implement the `searchBarTextDidEndEditing` and set `isSearching` to `false`.
 6. In `ViewDidLoad` set the Search Bar's delegate property equal to `self` 
@@ -261,7 +261,7 @@ Refactor the photo selection functionality from the Add Post scene into a child 
 
 Child view controllers control views that are a subview of another view controller. It is a great way to encapsulate functionality into one class that can be reused in multiple places. This is a great tool for any time you want a similar view to be present in multiple places.
 
-In this instance, you will put 'Select Photo' button, the image view, and the code that presents and handles the `UIImagePickerController` into a `PhotoSelectorViewController` class. You will also define a protocol for the `PhotoSelectorViewController` class to communicate with it's parent view controller.
+In this instance, you will put 'Select Photo' button, the image view, and the code that presents and handles the `UIImagePickerController` into a `PhotoSelectorViewController` class. You will also define a protocol for the `PhotoSelectorViewController` class to communicate with its parent view controller.
 
 #### Container View and Embed Segues
 
@@ -273,7 +273,7 @@ Use a container view to embed a child view controller into the Add Post scene.
 2. Add a new section to the static table view to build the Container View to embed the child view controller.
 3. Search for Container View in the Object Library and add it to the newly created table view cell.
     * note: The Container View object will come with a view controller scene. You can use the included scene, or replace it with another scene. For now, use the included scene.
-4. Set up contraints so that the Container View fills the entire cell.
+4. Set up constraints so that the Container View fills the entire cell.
 5. Move or copy the Image View and 'Select Photo' button to the container view controller.
 6. Create a new `PhotoSelectViewController` file as a subclass of `UIViewController` and assign the class to the scene in Interface Builder.
 7. Create the necessary IBOutlets and IBActions, and migrate your Photo Picker code from the Add Post view controller class. Delete the old code from the Add Post view controller class.
@@ -283,7 +283,7 @@ You now have two views that reference the same scene as a child view controller.
 
 #### Child View Controller Delegate
 
-Your child view controller needs a way to communicate events to it's parent view controller. This is most commonly done through delegation. Define a child view controller delegate, adopt it in the parent view controller, and set up the relationship via the embed segue.
+Your child view controller needs a way to communicate events to its parent view controller. This is most commonly done through delegation. Define a child view controller delegate, adopt it in the parent view controller, and set up the relationship via the embed segue.
 
 1. Define a new `PhotoSelectViewControllerDelegate` protocol in the `PhotoSelectViewController` file with a required `photoSelectViewControllerSelected(image: UIImage)` function that takes a `UIImage` parameter to pass the image that was selected.
     * note: This function will tell the assigned delegate (the parent view controller, in this example) what image the user selected.
@@ -292,9 +292,9 @@ Your child view controller needs a way to communicate events to it's parent view
 4. Adopt the `PhotoSelectViewControllerDelegate` protocol in the Add Post class file, implement the `photoSelectViewControllerSelectedImage` function to capture a reference to the selected image.
     * note: In the Add Post scene, you will use that captured reference to create a new post.
 
-Note the use of the delegate pattern. You have encapsulated the Photo Selection workflow in one class, but by implementing the delegate pattern,  each parent view controller can implement it's own response to when a photo was selected.
+Note the use of the delegate pattern. You have encapsulated the Photo Selection workflow in one class, but by implementing the delegate pattern,  each parent view controller can implement its own response to when a photo was selected.
 
-You have declared a protocol, adopted the protocol, but you now must assign the delegate property on the instance of the child view controller so that the `PhotoSelectViewController` can communicate with it's parent view controller. This is done by using the embed segue, which is called when the Container View is initialized from the Storyboard, which occurs when the view loads.
+You have declared a protocol, adopted the protocol, but you now must assign the delegate property on the instance of the child view controller so that the `PhotoSelectViewController` can communicate with its parent view controller. This is done by using the embed segue, which is called when the Container View is initialized from the Storyboard, which occurs when the view loads.
 
 1. Assign segue identifiers to the embed segues in the Storyboard file
 2. Update the `prepare(forSegue: ...)` function in the Add Post scene to check for the segue identifier, capture the `destinationViewController` as a `PhotoSelectViewController`, and assign `self` as the child view controller's delegate.
