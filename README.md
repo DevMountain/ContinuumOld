@@ -31,15 +31,15 @@ Students who complete this project independently are able to:
 * use subscriptions to generate push notifications
 * use push notifications to run a push based sync engine
 
-## Why CloudKit? 
+## Why CloudKit?
 
-If you were in an interview and a developer asked you why you chose to use CloudKit, what would your answer be? "Because my mentors taught me", would be a lazy answer. Be confident with your decision to show you know what you're talking about. My reasons would be as follows. 
+If you were in an interview and a developer asked you why you chose to use CloudKit, what would your answer be? "Because my mentors taught me", would be a lazy answer. Be confident with your decision to show you know what you're talking about. My reasons would be as follows.
 
-* CloudKit is organic. You don't have to download anything. It forces you to become a better Apple programmer by following their conventions and design principles. 
-* Its free! 
+* CloudKit is organic. You don't have to download anything. It forces you to become a better Apple programmer by following their conventions and design principles.
+* Its free!
 * Free authentication.
-* Great privacy protection. 
-* Really good resources, from Apple Programming Guides, WWDC videos on cloudKit best practices, easy to handle new updates. 
+* Great privacy protection.
+* Really good resources, from Apple Programming Guides, WWDC videos on cloudKit best practices, easy to handle new updates.
 
 
 All of these apps use CloudKit. Millions of users make use of these apps every day. If you work hard this week to learn these covered concepts, you'll see it pay off in your capstones. If you work hard in your capstones, you'll literally see your hard work pay off.
@@ -241,7 +241,7 @@ Use a UISearchbar to allow a user to search through different posts for the give
 6. Implement the `searchBarCancelButtonClicked(_ searchBar:)`  function, using it to set the results array equal to `PostController.shared.posts` then reload the table view.  You should also set the searchBar's text equal to an empty String and resign its first responder.  This will return the feed back to its normal state of displaying all posts when the user cancels a search.
 7. Implement the `searchBarTextDidBeginEditing` and set `isSearching` to `true`.
 8. Implement the `searchBarTextDidEndEditing` and set `isSearching` to `false`.
-6. In `ViewDidLoad` set the Search Bar's delegate property equal to `self` 
+6. In `ViewDidLoad` set the Search Bar's delegate property equal to `self`
 
 ### Image Picker Controller
 
@@ -328,18 +328,18 @@ You will implement push notifications, subscriptions, and basic automatic sync f
 
 ### CloudKit Manager
 
-Ask your instructor about what the CloudKit Manager was used for and why we took it out. It's a good code achitecture, however difficult to grasp in one week. Abstraction is an important concept to grasp. The CloudKit Manager abstracts CloudKit code into a single helper class that implements basic CloudKit functionality. You are welcome to make a CloudKit Manager if you’ve used abstraction in other programming languages. 
+Ask your instructor about what the CloudKit Manager was used for and why we took it out. It's a good code architecture, however difficult to grasp in one week. Abstraction is an important concept to grasp. The CloudKit Manager abstracts CloudKit code into a single helper class that implements basic CloudKit functionality. You are welcome to make a CloudKit Manager if you’ve used abstraction in other programming languages.
 
 ### Update Post for CloudKit functionality
 
 1. Add a computed property `recordType` and return the type you would like used to identify 'Post' objects in CloudKit. (Note: this is simply so that you don't have to write `Post.typeKey` a bunch of times within the scope of this class, and instead simply write `recordType`.)
-2. Add a recordID property that is equal to a 'CKRecord.ID' with a default value of a uuidString. 
+2. Add a recordID property that is equal to a 'CKRecord.ID' with a default value of a uuidString.
 
-3. To save your photo to CloudKit, it must be stored as a `CKAsset`. `CKAsset`s must be initialized with a file path URL. In order to accomplish this, you need to create a temporaryDirecory that copies the contents of the `photoData: Data?` property to a file in a temporary directory and returns the URL to the file. This is going to be a 3 step process.
+3. To save your photo to CloudKit, it must be stored as a `CKAsset`. `CKAsset`s must be initialized with a file path URL. In order to accomplish this, you need to create a temporaryDirectory that copies the contents of the `photoData: Data?` property to a file in a temporary directory and returns the URL to the file. This is going to be a 3 step process.
 
-  - 2.1. Save the image temporarily to disk
-  - 2.2. Create the CKAsset
-  - 2.3. Remove the temporary file
+  - 3.1. Save the image temporarily to disk
+  - 3.2. Create the CKAsset
+  - 3.3. Remove the temporary file
 
 It looks like this:
 
@@ -347,7 +347,7 @@ It looks like this:
     var imageAsset: CKAsset? {
         get {
             let tempDirectory = NSTemporaryDirectory()
-            let tempDirecotryURL = URL(fileURLWithPath: tempDirectory)
+            let tempDirectoryURL = URL(fileURLWithPath: tempDirectory)
             let fileURL = tempDirecotryURL.appendingPathComponent(UUID().uuidString).appendingPathExtension("jpg")
             self.tempURL = fileURL
             do {
@@ -359,8 +359,8 @@ It looks like this:
         }
     }
 ```
-The whole point of the above computed property is to read and write for our photo property. Look up `CKAsset`, it can only take a fileURL. We want to create a temorary file url so we can write to it. Once we are done using the temp url, we have to remove it otherwise it can drain our memory. The TemoraryDirecorty comes from FileMnager and there is already a shared method that can remove the temp url. 
-   - 2.3. Remove the temporary file
+The whole point of the above computed property is to read and write for our photo property. Look up `CKAsset`, it can only take a fileURL. We want to create a temporary file url so we can write to it. Once we are done using the temp url, we have to remove it otherwise it can drain our memory. The TemoraryDirecorty comes from FileManager and there is already a shared method that can remove the temp url.
+   - 3.3. Remove the temporary file
 ```
 deinit {
         if let url = tempURL {
@@ -372,16 +372,16 @@ deinit {
         }
     }
  ```
-      * note: `CKAsset` is initialized with a URL. When creating a `CKAsset` on the local device, you initialize it with a URL to a local file path where the photo is located on disk. When you save a `CKAsset`, the data at that file path is uploaded to CloudKit. When you pull a `CKAsset` from CloudKit, the URL will point to the remotely stored data.
+      note: `CKAsset` is initialized with a URL. When creating a `CKAsset` on the local device, you initialize it with a URL to a local file path where the photo is located on disk. When you save a `CKAsset`, the data at that file path is uploaded to CloudKit. When you pull a `CKAsset` from CloudKit, the URL will point to the remotely stored data.
 
-4. Add a computed property `recordType` and return the type you would like used to identify 'Post' objects in CloudKit. (Note: this is simply so that you don't have to write `Comment.typeKey` a bunch of times within the scope of this class, and instead simply write `recordType`.)
-5.Add an extention on CKRecord that will set create the CKRecord.ID of a 'Post' object and set each value. It will need the required convenience initializer `init?(record: CKRecord)`.
+
+4. Add an extension on CKRecord that will set create the CKRecord.ID of a 'Post' object and set each value. It will need the required convenience initializer `init?(record: CKRecord)`.
 
 
 ### Update Comment for CloudKit Functionality
 
 1. Add a computed property `recordType` and return the type you would like used to identify 'Comment' objects in CloudKit. (Note: this is simply so that you don't have to write `Comment.typeKey` a bunch of times within the scope of this class, and instead simply write `recordType`.)
-2.Add an extention on CKRecord that will set create the CKRecord.ID of a 'Comment' object and set each value. It will need the required convenience initializer `init?(record: CKRecord)`. and set each property. Add fileprivate strings for your keys to keep your code safe. 
+2. Add an extension on CKRecord that will set create the CKRecord.ID of a 'Comment' object and set each value. It will need the required convenience initializer `init?(record: CKRecord)`. and set each property. Add fileprivate strings for your keys to keep your code safe.
 
 Remember that a `Comment` should not exist without a `Post`. When a `Comment` is created from a `CKRecord`, you will also need to set the new comment's `Post` property. Consider how you would approach this. We will address it in the next section.
 
@@ -389,41 +389,41 @@ Remember that a `Comment` should not exist without a `Post`. When a `Comment` is
 
 ## Checking to see if the user is sigined into iCloud
 
-If the user isn't singed into their iCloud account, they are going to have a bad time using our app. BIG TIME BOARING, because most of the features wouldn't fully work. If they arn't sigined in, we want to let the user know immediately. How could we let the user know that they are not signed into iCloud? If they are signed into iCloud, we want the app to continue as usual. Take a moment and think about this, if it the user is signed in 'do something' if the user isn't signed in 'do something else'. What would our function signature look like? 
+If the user isn't signed into their iCloud account, they are going to have a bad time using our app. BIG TIME BORING, because most of the features wouldn't fully work. If they aren't signed in, we want to let the user know immediately. How could we let the user know that they are not signed into iCloud? If they are signed into iCloud, we want the app to continue as usual. Take a moment and think about this, if it the user is signed in 'do something' if the user isn't signed in 'do something else'. What would our function signature look like?
 
-This is going to be an asyc call to check the accountStatus of a iPhone user. `CKContainer` has an accountStatus fuction that can check the users status. There are 4 options, for `CKAccountStatus`. This is a great time to use a switch statment based on the users status inside the closure. Handel each case statment and completions. If you didn't see this coming already we need a `@escaping` completion closure to handel the events if the user is signed in or not. If the competion is false we can call another function within this fuction to present an alert and notify the user that they are not signed in. You'll want to Dispatch the alert on the main thread. Make a function calld presentErrorAlert(errorTitle: String, errorMsessage: String). You'll call this fuction within your accountStatus fuction. Based on the users status you'll provide the proper errorMessage to inform the user. 
+This is going to be an async call to check the accountStatus of a iPhone user. `CKContainer` has an accountStatus function that can check the user's status. There are 4 options, for `CKAccountStatus`. This is a great time to use a switch statement based on the users status inside the closure. Handle each case statement and completions. If you didn't see this coming already we need a `@escaping` completion closure to handle the events if the user is signed in or not. If the completion is false we can call another function within this function to present an alert and notify the user that they are not signed in. You'll want to Dispatch the alert on the main thread. Make a function called presentErrorAlert(errorTitle: String, errorMessage: String). You'll call this function within your accountStatus function. Based on the user's status you'll provide the proper errorMessage to inform the user.
 
-If you attempt to present an alert in this class, you'll notice an error. That's because PostController isn't a subclass of `UIViewController` nor should it be. We don't have access to any `UIViewController` yet. We need to talk to the system that is the centrailized point of contol and coordination that runs our app. `UIApplication`! Specifically we need the `UIApplicationDelegate`. Every app must have an app delegate object to respond to app-related messages. For example, the app notifies its delegate when the app finishes launching and when its foreground or background execution status changes. Similarly, app-related messages coming from the system are often routed to the app delegate for handling. Access the rootViewController, once you have the rootViewController you can present an alert.
+If you attempt to present an alert in this class, you'll notice an error. That's because PostController isn't a subclass of `UIViewController` nor should it be. We don't have access to any `UIViewController` yet. We need to talk to the system that is the centralized point of control and coordination that runs our app: `UIApplication`! Specifically we need the `UIApplicationDelegate`. Every app must have an app delegate object to respond to app-related messages. For example, the app notifies its delegate when the app finishes launching and when its foreground or background execution status changes. Similarly, app-related messages coming from the system are often routed to the app delegate for handling. Access the rootViewController, and once you have the rootViewController you can present an alert.
 
-Take a moment and try this on your own if you get stuck here is the code. 
-<details><summary> Account Status Code Snipit </summary><br>
-    
+Take a moment and try this on your own if you get stuck here is the code.
+<details><summary> Account Status Code Snippet </summary><br>
+
     ```func checkAccountStatus(completion: @escaping (_ isLoggedIn: Bool) -> Void) {
         CKContainer.default().accountStatus { [weak self] (status, error) in
             if let error = error {
                 print("Error checking accountStatus \(error) \(error.localizedDescription)")
                 completion(false); return
             } else {
-                let errrorText = "Sing in to iCloud in Settings"
+                let errorText = "Sign in to iCloud in Settings"
                 switch status {
                 case .available:
                    completion(true)
                 case .noAccount:
                     let noAccount = "No account found"
-                    self?.presentErrorAlert(errorTitle: errrorText, errorMessage: noAccount)
+                    self?.presentErrorAlert(errorTitle: errorText, errorMessage: noAccount)
                     completion(false)
                 case .couldNotDetermine:
-                    self?.presentErrorAlert(errorTitle: errrorText, errorMessage: "Error with iCloud account status")
+                    self?.presentErrorAlert(errorTitle: errorText, errorMessage: "Error with iCloud account status")
                     completion(false)
                 case .restricted:
-                    self?.presentErrorAlert(errorTitle: errrorText, errorMessage: "Restricted iCloud account")
+                    self?.presentErrorAlert(errorTitle: errorText, errorMessage: "Restricted iCloud account")
                     completion(false)
                 }
             }
         }
     }
     ```
-    
+
     func presentErrorAlert(errorTitle: String, errorMessage: String) {
         DispatchQueue.main.async {
             if let appDelegate = UIApplication.shared.delegate,
@@ -435,29 +435,32 @@ Take a moment and try this on your own if you get stuck here is the code.
     }
 </details>
 
-You should be getting an error if you copied this code. Good, because you chose to copy and paste, reasearch for 10 minutes on how to add your own alert mesage to any `UIViewController`. 
+You should be getting an error if you copied this code. Good, because you chose to copy and paste, research for 10 minutes on how to add your own alert message to any `UIViewController`.
 
-The `accountStatus` method is an async call thats why we want to Dispatch the alert on the main thread once we call the `presentErrorAlert` function insde the `checkAccountStatus` function. Call this in your app delegate and it should check if you're sigined in to iCloud, if not there sould be an alert controller. 
+The `accountStatus` method is an async call. That's why we want to dispatch the alert on the main thread once we call the `presentErrorAlert` function inside the `checkAccountStatus` function. Call this in your app delegate and it should check if you're signed in to iCloud. If you're not signed in, an alert controller should be presented.
 
 #### Saving Records
 
 Update the `PostController` to support pushing and pulling data from CloudKit.
 
-This is where we are going to be saving and fetching our data. 
+This is where we are going to be saving and fetching our data:
+
 ``` let publicDB = CKContainer.default().publicCloudDatabase ```
 
-1. Update the `createPost` function to create a `CKRecord` using your create function that you made eariler. Documentation on this is REALLY GOOD and its easy! Do you remember what is at the highest level of CloudKit? It's highest level starts with `CKContainer`, a container has 3 databases. All 3 databases have methods. Lets walk through this sep by step.
+1. Update the `createPost` function to create a `CKRecord` using your create function that you made earlier.
+Documentation on this is REALLY GOOD and it's easy! Do you remember what is at the highest level of CloudKit? Its highest level starts with `CKContainer`, a container has 3 databases. All 3 databases have methods. Let's walk through this sep by step.
 
-    - 1.1 - Plug in `CKContainer` in documentation. Re-read the intro if you don't know what it is. 
+    - 1.1 - Plug in `CKContainer` in documentation. Re-read the intro if you don't know what it is.
     - 1.2 - Scroll through and click on `CKDatabase`
     - 1.3 - Search for a save method. You should see 3 options. Which one do we want? What are we saving? What is the heart of CloudKit?
-    #### CKRecords! Are the heart of cloudKit. If you save an object, it must be a CKRecord. If you fetch an object, it must be a CKRecord. Drill that in your head, or you'll NSCashe me outside. 
-    
-The function signature looks like so. It's asking for a `CKRecord`, so lets give it a `CKRecord`. 
+    #### CKRecords are the heart of cloudKit! If you save an object, it must be a CKRecord. If you fetch an object, it must be a CKRecord. Drill that into your head, or you'll NSCashe me outside.
+
+The function signature looks like so. It's asking for a `CKRecord`, so lets give it a `CKRecord`.
+
     ```func save(CKRecord, completionHandler: (CKRecord?, Error?) -> Void)```
-That was the point of making an extention on CKRecord. It makes it realy easy to creat an instance of post and turn a post into a CKReocrd. Look how cool this is! 
-    
-![Alt text](/Photos/CKRecordExtention.png?raw=true "CkRecord")
+That was the point of making an extension on CKRecord. It makes it really easy to create an instance of post and turn a post into a CKRecord. Look how cool this is!
+
+![Alt text](/Photos/CKRecordExtension.png?raw=true "CkRecord")
 
 In Borat's voice "Very nice".  
 
@@ -465,15 +468,15 @@ At this point you should be able to save a post record and see it in your CloudK
 ![Alt text](/Photos/dashboard.png?raw=true "Photos")
 
 
-2. Update the `addCommentToPost` function to to create a `CKRecord` using the extention of `CKRecord` you created for your `Comment` object, and call the `cloudKitManager.saveRecord` function. The user will be adding comments to an existing post. We need to set up our one to many realtionship for our `Comment` model. 
+2. Update the `addCommentToPost` function to to create a `CKRecord` using the extension of `CKRecord` you created for your `Comment` object, and call the `cloudKitManager.saveRecord` function. The user will be adding comments to an existing post. We need to set up our one to many relationship for our `Comment` model.
 
-- 2.1 Update your extention on `CKRecord` for your `Comment` object. You want to create a post constant to from the convenience init parameter of comment, else do a `fatalError("Comment does not have a Post relationship")`. 
-- 2.2 Set each value for comment 
-- 2.3 Set a `CKRecord.Referenc` value. The key will be the postReferenceKey. This is what makes our relation ship stronger (not strong), so we can query the comments that belong to a post easier. the postReference value is going to be the UUID of that post that owns the comment.
+- 2.1 Update your extension on `CKRecord` for your `Comment` object. You want to create a post constant to from the convenience init parameter of comment, else do a `fatalError("Comment does not have a Post relationship")`.
+- 2.2 Set each value for comment
+- 2.3 Set a `CKRecord.Reference` value. The key will be the postReferenceKey. This is what makes our relationship stronger (not strong), so we can query the comments that belong to a post more easily. The postReference value is going to be the UUID of the post that owns the comment.
 
-This proccess is called "Backreferencing". Where the lower object (Comment) points pack to its parent (Post). 
+This process is called "Backreferencing". Where the lower object (Comment) points back to its parent (Post).
 
-Here is the code for the extention of `CKRecord` for `Comment` if you get stuck. 
+Here is the code for the extension of `CKRecord` for `Comment` if you get stuck.
 
 <details><summary> CKRecord for Comment </summary><br>
 
@@ -496,7 +499,7 @@ At this point, each new `Post` or `Comment` should be pushed to CloudKit when ne
 
 #### Fetching Records
 
-There are a number of approaches you could take to fetching new records. For Timeline, we will simply be fetching (or re-fetching, after the initial fetch) all the posts at once. Note that while we are doing it in this project, it is not an optimal solution. We are doing it here so you can master the basics of CloudKit first.
+There are a number of approaches you could take to fetching new records. For Continuum, we will simply be fetching (or re-fetching, after the initial fetch) all the posts at once. Note that while we are doing it in this project, it is not an optimal solution. We are doing it here so you can master the basics of CloudKit first.
 
 Note: If you want the challenge, you could modify the following functions so that you only fetch the records you don't already have on the device. **This is not required, and is a Black Diamond**
 
@@ -504,13 +507,13 @@ Note: If you want the challenge, you could modify the following functions so tha
 
 ##### Fetching Posts
 
-1. Add a `fetchPosts` function that has a completion closure. Give the completion an array of optional `[Post]?` 's.
-2. Call the `publicDB` property to perform a query. Now we know we need tom make a `CKQuery` and a `NSPredicate`. The preicate value will be set to true which means it will fetch every post.
-3. Handel the error 
-4. Unwrape the records, and `compactMap` through your failable initializer of `Post` and pass in $0 as your argument. This will return a new array of posts fetched from our publicDB. 
-5. Don't for get to set your local array to the new array of posts. This is how the TVC will populate all our posts. And call completion. 
+1. Add a `fetchPosts` function that has a completion closure. Give the completion an optional array of `[Post]?`s.
+2. Call the `publicDB` property to perform a query. Now we know we need tom make a `CKQuery` and a `NSPredicate`. The predicate value will be set to true which means it will fetch every post.
+3. Handle the error
+4. Unwrap the records, and `compactMap` through your failable initializer of `Post` and pass in $0 as your argument. This will return a new array of posts fetched from our publicDB.
+5. Don't for get to set your local array to the new array of posts. This is how the TVC will populate all our posts. And call completion.
 
-Note! Option click on `perfomr(query)`. It says "Do not use this method when the number of returned records is potentially more than a few hundred records; when more records are needed, create an execute a CKQueryOperation". Instagram doesn't fetch everysigle post for the useers that you follow. At the bottom of this ReadMe, there is an advanced fetching video to cover how to fetch paginated posts. The above steps work, but if we get a lot of users, this could break our app. 
+Note! Option click on `perform(query)`. It says "Do not use this method when the number of returned records is potentially more than a few hundred records; when more records are needed, create an execute a CKQueryOperation". Instagram doesn't fetch every single post for the users that you follow. At the bottom of this ReadMe, there is an advanced fetching video to cover how to fetch paginated posts. The above steps work, but if we get a lot of users, this could break our app.
 
 
 ##### Fetching Comments
@@ -518,18 +521,18 @@ Note! Option click on `perfomr(query)`. It says "Do not use this method when the
  We're going to create a function that will allow us to fetch all the comments for a specific post we give it.
 
 1. Add a fetchCommentsFor(post: Post, ...) function that has a completion closure. Give the completion a Bool.
-2. Call your `publicDB` to perfomr a query. 
+2. Call your `publicDB` to perform a query.
 3. Because we don't want to fetch every comment ever created, we must use a different `NSPredicate` than the default one. Create a predicate that checks the value of the correct field that corresponds to the post `CKReference` on the Comment record against the `CKReference` you created in the last step.
 4. Add a second predicate to includes all of the commentID's that have NOT been fetched. (If stuck hit the down arrow)
 
 <details><summary> Filter comments </summary><br>
-    
-        let postRefence = post.recordID
-        let predicate = NSPredicate(format: "postReference == %@", postRefence)
+
+        let postReference = post.recordID
+        let predicate = NSPredicate(format: "postReference == %@", postReference)
         let commentIDs = post.comments.compactMap({$0.recordID})
         let predicate2 = NSPredicate(format: "NOT(recordID IN %@)", commentIDs)
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate, predicate2]
-        let query = CKQuery(recordType: "Comment", predicate: compoundPredicate) 
+        let query = CKQuery(recordType: "Comment", predicate: compoundPredicate)
 </details>
 
 
@@ -543,7 +546,7 @@ Note! Option click on `perfomr(query)`. It says "Do not use this method when the
 2. Add a `didSet` property observer to the `posts` property.
 3. In the `didSet`, post a `PostController.PostsChangedNotification` `NSNotification.Name` to notify any interested listeners that the array of posts has changed. Post the notification on the main queue since observers will be updating UI in response, and that can only be done on the main queue.
 4. In Post.swift, create a `didSet` property observer to the `comments` property.
-5. Post a `PostController.PostCommentsChangedNotification`. in the `didSet` created in the previous step. Again this must be done on the main queue. Use the `Post` whose comments changed as the object of the notification. (Since you are in the Post class, you would do that by saying `self`)
+5. Post a `PostController.PostCommentsChangedNotification`. in the `didSet` created in the previous step. Again this must be done on the main queue. Use the `Post` whose comments changed as the object of the notification. (Since you are in the `PostController` class, you would do that by saying `self`)
 
 1. Add a new function to request a full sync operation that takes an optional completion closure. Implement the function by turning on the network activity indicator, calling the `performFullSync` function on the `PostController`, and turning off the network activity indicator in the completion.
 2. Call the function in the `viewDidLoad` lifecycle function to initiate a full sync when the user first opens the application.
@@ -561,7 +564,7 @@ At this point the app should support basic push and fetch syncing from CloudKit.
 
 ![screen shot 2018-09-26 at 12 13 12 pm](https://user-images.githubusercontent.com/23179585/46100095-d8635600-c185-11e8-9715-9f8a64d5536e.png)
 
-When you tap on a post cell it should bring you to the detailVC. The comments that belong to that post should be fetched. 
+When you tap on a post cell it should bring you to the detailVC. The comments that belong to that post should be fetched.
 
 ### Black Diamonds:
 
@@ -591,7 +594,7 @@ Create and save a subscription for all new `Post` records.
 1. Add a function `subscribeToNewPosts` that takes an optional completion closure with  `Bool` and `Error?` parameters.
     * note: Use an identifier that describes that this subscription is for all posts.
 2. Initialize a new CKQuerySubscription for the `recordType` of 'Post'.  Pass in a predicate object with it value set to `true`.
-3. Save the subscription to the public database.  Handle any error which may be passed out of the completion handler and complete with true of false based on whether or not an error occured while saving.
+3. Save the subscription to the public database.  Handle any error which may be passed out of the completion handler and complete with true of false based on whether or not an error occurred while saving.
 3. Call the `subscribeToNewPosts` in the initializer for the `PostController` so that each user is subscribed to new `Post` records saved to CloudKit.
 
 #### Subscribe to New Comments
@@ -599,10 +602,10 @@ Create and save a subscription for all new `Post` records.
 Create and save a subscription for all new `Comment` records that point to a given `Post`
 
 1. Add a function `addSubscriptionTo(commentsForPost post: ...)` that takes a `Post` parameter and an optional completion closure wich takes in a `Bool` and `Error` parameters.
-2. Initialize a new NSPredicate formated to search for all post references equal to the `recordID` property on the `Post` parameter from the function.
-3. Initalize a new `CKQuerySubscription` with a record type of `Comment`, the predicate from above, a `subscriptionID` equal to the posts record name which can be accessed using `post.recordID.recordName`, with the `options` set to `CKQuerySubscription.Options.firesOnRecordCreation` 
-4. Initalize a new `CKSubscription.NotificationInfo` with an empty inializer.  You can then set the properties of `alertBody`, `shouldSendContentAvailable`, and `desiredKeys`.  Once you have adjusted these settings, the `notificationInfo` property on the instance of `CKQuerySubscription` you initialized above.
-5. Save the subscription you initalized and modified in the public database.  Check for an error in the ensuing completion handler.
+2. Initialize a new NSPredicate formatted to search for all post references equal to the `recordID` property on the `Post` parameter from the function.
+3. Initialize a new `CKQuerySubscription` with a record type of `Comment`, the predicate from above, a `subscriptionID` equal to the posts record name which can be accessed using `post.recordID.recordName`, with the `options` set to `CKQuerySubscription.Options.firesOnRecordCreation`
+4. Initialize a new `CKSubscription.NotificationInfo` with an empty initializer.  You can then set the properties of `alertBody`, `shouldSendContentAvailable`, and `desiredKeys`.  Once you have adjusted these settings, the `notificationInfo` property on the instance of `CKQuerySubscription` you initialized above.
+5. Save the subscription you initialized and modified in the public database.  Check for an error in the ensuing completion handler.
 * Please see the [CloudKit Programming Guide](https://developer.apple.com/library/archive/documentation/DataManagement/Conceptual/CloudKitQuickStart/SubscribingtoRecordChanges/SubscribingtoRecordChanges.html#//apple_ref/doc/uid/TP40014987-CH8-SW1) and [CKQuerySubscription Documentation](https://developer.apple.com/documentation/cloudkit/ckquerysubscription) for more detail.
 
 #### Manage Post Comment Subscriptions
@@ -614,7 +617,7 @@ The Post Detail scene allows users to follow and unfollow new `Comment`s on a gi
     * note: Use the unique identifier you used to save the subscription above. Most likely this will be your unique `recordName` for the `Post`.
 3. Add a function `checkSubscription(to post: ...)` that takes a `Post` parameter and an optional completion closure with a  `Bool` parameter.
 4. Implement the function by fetching the subscription by calling `fetch(withSubscriptionID: ...)` passing in the unique `recordName` for the `Post`.  Handle any errors which may be generated in the completion handler.  If the `CKSubscription` is not equal to nil complete with `true`, else complete with `false`.
-    
+
 5. Add a function `toggleSubscriptionTo(commentsForPost post: ...)` that takes a `Post` parameter and an optional completion closure with `Bool`, and `Error` parameters.
 6. Implement the function by calling the `checkForSubscription(to post:...)` function above.  If a subscription does not exist, subscribe the user to comments for a given post by calling the `addSubscriptionTo(commentsForPost post: ...)` ; if one does, cancel the subscription by calling  `removeSubscriptionTo(commentsForPost post: ...)`.
 
@@ -633,7 +636,7 @@ Update the Info.plist to declare backgrounding support for responding to remote 
 
 2. Request the user's permission to display notifications in the `AppDelegate` `didFinishLaunchingWithOptions` function.
     * note: Use the `requestAuthorization` function that is a part of `UNUserNotificationCenter`.
-3. Reigster the App to recieve push notifications `application.registerForRemoteNotifications()`
+3. Register the App to receive push notifications `application.registerForRemoteNotifications()`
 
 ### Handle Received Push Notifications
 
